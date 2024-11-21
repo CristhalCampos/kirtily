@@ -1,0 +1,1 @@
+import { Publication } from "../models/publications.model.js";
