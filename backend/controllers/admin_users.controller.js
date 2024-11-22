@@ -1,3 +1,5 @@
+import { User } from "../models/users.model.js";
+
 /**
  * Get all users
  * @function getAllUsers
@@ -12,47 +14,16 @@
 export const getAllUsers = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
-    const users = await User.paginate({deleted: false}, { page, limit });
+    const users = await User.paginate(
+      {deleted: false},
+      { username: 1, email: 1, role: 1, status: 1, createdAt: 1, updatedAt: 1 },
+      { page, limit }
+    );
     res.status(200).json(users);
   } catch (error) {
     error.name === "ValidationError"
       ? res.status(400).json({ error: error.message })
       : res.status(500).json({ error: "Internal server error" });
-  }
-}
-
-/**
- * Get statistics of users, active users: user, userpremium and admin, blocked users and deleted users
- * @function getStadistics
- * @param {Object} req - Request object
- * @param {Object} res - Response object
- * @returns {Object} - Statistics
- * @method GET
- * @example http://localhost:3001/admin/stadistics
- */
-export const getStadistics = async (req, res) => {
-  try {
-    const statistics = await User.aggregate([
-      {
-        $facet: {
-          activeUsers: [
-            { $match: { deleted: false, status: "active" } },
-            { $group: { _id: "$role", count: { $sum: 1 } } }
-          ],
-          blockedUsers: [
-            { $match: { deleted: false, status: "blocked" } },
-            { $count: "count" }
-          ],
-          deletedUsers: [
-            { $match: { deleted: true } },
-            { $count: "count" }
-          ]
-        }
-      }
-    ]);
-    res.status(200).json(statistics);
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
   }
 }
 

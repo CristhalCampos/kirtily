@@ -1,5 +1,5 @@
 import { Router} from "express";
-import { getUser, searchUser, createUser, editUser } from "../controllers/users.controller.js";
+import { getUser, searchUser, editUser } from "../controllers/users.controller.js";
 
 /**
  * Users routes
@@ -17,12 +17,6 @@ routerUsers.get("users/:username", getUser);
  * @method GET
  */
 routerUsers.get("/search", searchUser);
-
-/**
- * Create user
- * @method POST
- */
-routerUsers.post("/users", createUser);
 
 /**
  * Edit user profile or user account
