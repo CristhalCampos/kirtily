@@ -56,64 +56,17 @@ export const loginUser = async (req, res) => {
 }
 
 /**
- * Get user by username
- * @function getUser
+ * Logout user
+ * @function logoutUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
- * @param {String} req.params.username - User username
- * @returns {Object} - User
- * @method GET
- * @example http://localhost:3001/users/username
+ * @returns {Object} - Message
+ * @method POST
+ * @example http://localhost:3001/users
  */
-export const getUser = async (req, res) => {
-  try {
-    const user = await User.findOne(
-      { username: req.params.username, deleted: false, status: "active" },
-      { fullName: 1, username: 1, profilePicture: 1, bio: 1, interests: 1, followers: 1, following: 1, subscription: 1 }
-    );
-    user ? res.status(200).json(user) : res.status(404).json({ error: "User not found" });
-  } catch (error) {
-    error.name === "CastError"
-      ? res.status(400).json({ error: "Invalid user id" })
-      : res.status(500).json({ error: "Internal server error" });
-  }
-}
-
-/**
- * Search user by full name, username, bio or any of interests
- * @function searchUser
- * @param {Object} req - Request object
- * @param {Object} res - Response object
- * @query {String} search - Search term
- * @query {Number} page - Page number
- * query {Number} limit - Limit of users
- * @returns {Object} - List of users
- * @method GET
- * @example http://localhost:3001/search?search=user&page=1&limit=10
- */
-export const searchUser = async (req, res) => {
-  try {
-    const { search, page = 1, limit = 10 } = req.query;
-    if (!search) return res.status(400).json({ error: "Search term is required" });
-    const user = await User.paginate(
-      { $or: [
-          { fullName: { $regex: search, $options: "i" } },
-          { username: { $regex: search, $options: "i" } },
-          { bio: { $regex: search, $options: "i" } },
-          { interests: { $elemMatch: { $regex: search, $options: "i" } } }
-        ],
-        deleted: false,
-        status: "active"
-      },
-      { username: 1, profilePicture: 1, interests: 1 },
-      { page, limit }
-    );
-    user.docs.length > 0 ? res.status(200).json(user) : res.status(404).json({ error: "User not found" });
-  } catch (error) {
-    error.name === "ValidationError"
-      ? res.status(400).json({ error: error.message })
-      : res.status(500).json({ error: "Internal server error" });
-  }
+export const logoutUser = async (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json("User logged out");
 }
 
 /**
@@ -136,8 +89,8 @@ export const editUser = async (req, res) => {
   try {
     const userExists = await User.findOne({ username: req.params.username });
     if (!userExists) return res.status(404).json({ error: "User not found" });
-    if (userExists.status !== "active" || userExists.deleted) {
-      return res.status(403).json({ error: "User is not active or has been deleted" });
+    if (userExists.status === "blocked" || userExists.deleted) {
+      return res.status(403).json({ error: "User is blocked or has been deleted" });
     }
     const updatedUser = {};
     if (req.body.password) updatedUser.password = await bcrypt.hash(req.body.password, process.env.SALT_ROUNDS);
@@ -151,6 +104,30 @@ export const editUser = async (req, res) => {
       { $set: updatedUser }
     );
     res.status(200).json("User updated");
+  } catch (error) {
+    error.name === "CastError"
+      ? res.status(400).json({ error: error.message })
+      : res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+/**
+ * Share profile
+ * @function shareProfile
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * param {String} req.params.username - Username of the user
+ * @returns {Object} - Message
+ * @method GET
+ * @example http://localhost:3001/users/:username
+ */
+export const shareProfile = async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username }, { username: 1, status: 1, deleted: 1 });
+    if (user.status === "blocked" || user.deleted) {
+      return res.status(403).json({ error: "User is blocked or has been deleted" });
+    }
+    res.status(200).json(`http://localhost:3001/users/${user.username}`);
   } catch (error) {
     error.name === "CastError"
       ? res.status(400).json({ error: error.message })

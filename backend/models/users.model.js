@@ -9,7 +9,7 @@ import mongoosePaginate from "mongoose-paginate-v2";
  * @property {String} email - Email of the user
  * @property {String} password - Password of the user
  * @property {String} role - Role of the user, "admin", "user" or "userpremium"
- * @property {String} status - Status of the user, "blocked" or "active"
+ * @property {String} status - Status of the user, "active", "blocked" or "reported"
  * @property {Array} interests - Interests of the user
  * @property {String} profilePicture - Profile picture of the user
  * @property {String} bio - Bio of the user
@@ -18,38 +18,25 @@ import mongoosePaginate from "mongoose-paginate-v2";
  * @property {Array} publications - Publications of the user
  * @property {Object} subscription - Subscription of the user
  * @property {Boolean} deleted - Deleted status of the user
+ * @property {Array} blockedUsers - Blocked users of the user
  * @property {Date} createdAt - Date of creation
  * @property {Date} updatedAt - Date of update
  */
 const userSchema = new mongoose.Schema(
   {
-    fullName: {
-      type: String,
-      required: true,
-      validate: /^[a-zA-Z ]+$/,
-    },
+    fullName: { type: String, required: true },
     username: {
       type: String,
       required: true,
-      validate: /^[a-z0-9]{3,15}$/,
       unique: true,
       default: function () {
         return this.fullName.toLowerCase().replace(/ /g, "") + Math.round(Math.random() * 10);
       },
     },
-    email: {
-      type: String,
-      required: true,
-      validate: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      validate: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,15}$/,
-    },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     role: { type: String, enum: ["admin", "user", "userpremium"], default: "user" },
-    status: { type: String, enum: ["blocked", "active"], default: "active" },
+    status: { type: String, enum: ["active", "blocked", "reported"], default: "active" },
     interests: [{ type: String, enum: ["music", "technology", "food", "bakery", "design", "gospel", "dance", "art"] }],
     profilePicture: { type: String },
     bio: { type: String },
@@ -57,7 +44,8 @@ const userSchema = new mongoose.Schema(
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     publications: [{ type: mongoose.Schema.Types.ObjectId, ref: "Publication" }],
     subscription: { type: mongoose.Schema.Types.ObjectId, ref: "Subscription" },
-    deleted: { type: Boolean, default: false }
+    deleted: { type: Boolean, default: false },
+    blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
   },
   { timestamps: true }
 );

@@ -15,7 +15,7 @@ export const getAllUsers = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
     const users = await User.paginate(
-      {deleted: false},
+      { deleted: false },
       { username: 1, email: 1, role: 1, status: 1, createdAt: 1, updatedAt: 1 },
       { page, limit }
     );
@@ -39,19 +39,19 @@ export const getAllUsers = async (req, res) => {
  */
 export const blockOrUnblockUser = async (req, res) => {
   try {
-    const userExists = await User.findOne({ username: req.params.username });
+    const userExists = await User.findOne({ username: req.params.username }, {username: 1, status: 1, deleted: 1 });
     if (!userExists) return res.status(404).json({ error: "User not found" });
     if (userExists.deleted) {
       return res.status(403).json({ error: "User has been deleted" });
     }
     if (userExists.status === "blocked") {
-      const updatedUser = await User.findOneAndUpdate(
+      await User.findOneAndUpdate(
         { _id: req.params.id },
         { status: "active" }
       );
       res.status(200).json("User unblocked");
-    } else if (userExists.status === "active") {
-      const updatedUser = await User.findOneAndUpdate(
+    } else if (userExists.status === "active" || userExists.status === "reported") {
+      await User.findOneAndUpdate(
         { _id: req.params.id },
         { status: "blocked" }
       );
@@ -76,10 +76,10 @@ export const blockOrUnblockUser = async (req, res) => {
  */
 export const deleteUser = async (req, res) => {
   try {
-    const userExists = await User.findOne({ username: req.params.username });
+    const userExists = await User.findOne({ username: req.params.username }, {username: 1, status: 1, deleted: 1 });
     if (!userExists) return res.status(404).json({ error: "User not found" });
     if (userExists.deleted) return res.status(403).json({ error: "User has been deleted" });
-    const updatedUser = await User.findOneAndUpdate(
+    await User.findOneAndUpdate(
       { _id: req.params.id },
       { deleted: true }
     );
