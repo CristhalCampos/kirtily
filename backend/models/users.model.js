@@ -15,6 +15,7 @@ import mongoosePaginate from "mongoose-paginate-v2";
  * @property {String} bio - Bio of the user
  * @property {Array} followers - Followers of the user
  * @property {Array} following - Following of the user
+ * @property {Array} inspirations - Inspirations of the user
  * @property {Array} publications - Publications of the user
  * @property {Object} subscription - Subscription of the user
  * @property {Boolean} deleted - Deleted status of the user
@@ -25,14 +26,7 @@ import mongoosePaginate from "mongoose-paginate-v2";
 const userSchema = new mongoose.Schema(
   {
     fullName: { type: String, required: true },
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-      default: function () {
-        return this.fullName.toLowerCase().replace(/ /g, "") + Math.round(Math.random() * 10);
-      },
-    },
+    username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ["admin", "user", "userpremium"], default: "user" },
@@ -42,6 +36,7 @@ const userSchema = new mongoose.Schema(
     bio: { type: String },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    inspirations: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     publications: [{ type: mongoose.Schema.Types.ObjectId, ref: "Publication" }],
     subscription: { type: mongoose.Schema.Types.ObjectId, ref: "Subscription" },
     deleted: { type: Boolean, default: false },

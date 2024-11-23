@@ -7,7 +7,9 @@ import mongoosePaginate from "mongoose-paginate-v2";
  * @property {String} author - Author of the publication
  * @property {String} content - Content of the publication
  * @property {Array} media - Media of the publication
- * @property {Array} likes - Likes of the publication
+ * @property {Array} inspires - Inspires of the publication
+ * @property {Array} recommends - Recommends of the publication
+ * @property {Array} wantsToContribute - Wants to contribute of the publication
  * @property {Array} comments - Comments of the publication
  * @property {Array} hashtags - Hashtags of the publication
  * @property {String} status - Status of the publication, "active" or "reported"
@@ -22,7 +24,9 @@ const publicationSchema = new mongoose.Schema(
     title: { type: String },
     content: { type: String },
     media: [{ type: String }],
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    inspires: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    recommends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    wantsToContribute: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
     hashtags: [{ type: String }],
     status: [{ type: String, enum: ["active", "reported"], default: "active" }],

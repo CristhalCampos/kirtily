@@ -1,10 +1,7 @@
 import { User } from "../models/users.model.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { config } from "dotenv";
-config({ path: "./config/.env" });
-import cookie from "cookie-parser";
-
+import { registerValidation } from "../middlewares/registerValidation.middleware.js";
+import { encryptPassword } from "../middlewares/encryptPassword.middleware.js";
+import { generateToken } from "../middlewares/generateToken.middleware.js";
 
 /**
  * Register user
@@ -19,8 +16,8 @@ export const registerUser = async (req, res) => {
   try {
     const userExists = await User.findOne({ email: req.body.email });
     if (userExists) return res.status(400).json({ error: "User already exists" });
-    const hashedPassword = await bcrypt.hash(req.body.password, process.env.SALT_ROUNDS);
-    req.body.password = hashedPassword;
+    await registerValidation(req, res);
+    await encryptPassword(req, res);
     await User.create(req.body);
     res.status(201).json("User registered");
   } catch (error) {
@@ -45,8 +42,7 @@ export const loginUser = async (req, res) => {
     if (!user) return res.status(401).json({ error: "User not found" });
     const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
     if (!isPasswordValid) return res.status(401).json({ error: "Invalid password" });
-    const token = jwt.sign({ username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
+    await generateToken(user);
     res.status(200).json("User logged in");
   } catch (error) {
     error.name === "ValidationError"
