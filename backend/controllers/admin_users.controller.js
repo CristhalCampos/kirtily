@@ -28,6 +28,56 @@ export const getAllUsers = async (req, res) => {
 }
 
 /**
+ * Create user
+ * @function createUser
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @body {String} fullName - Full name of the user
+ * @body {String} username - Username of the user
+ * body {String} email - Email of the user
+ * @body {String} password - Password of the user
+ * @body {String} confirmPassword - Confirm password of the user
+ * @returns {Object} - Message
+ * @method POST
+ * @example http://localhost:3001/admin/users
+ */
+export const createUser = async (req, res) => {
+  try {
+    //Validar datos y encriptar contraseña
+    await User.create(req.body);
+    res.status(201).json("User created");
+  } catch (error) {
+    error.name === "ValidationError"
+      ? res.status(400).json({ error: error.message })
+      : res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+/**
+ * Edit user
+ * @function editUser
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @param {String} req.params.username - Username of the user
+ * @returns {Object} - Message
+ * @method PATCH
+ * @example http://localhost:3001/admin/users/:username
+ */
+export const editUser = async (req, res) => {
+  try {
+    const userExists = await User.findOne({ username: req.params.username }, {username: 1, status: 1, deleted: 1 });
+    if (!userExists) return res.status(404).json({ error: "User not found" });
+    //Hacer validación de los datos
+    await User.findOneAndUpdate({ username: req.params.username }, { $set: req.body });
+    res.status(200).json("User updated");
+  } catch (error) {
+    error.name === "CastError"
+      ? res.status(400).json({ error: error.message })
+      : res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+/**
  * Block or unblock user
  * @function blockUser
  * @param {Object} req - Request object

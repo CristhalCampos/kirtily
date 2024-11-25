@@ -1,3 +1,5 @@
+import { Publication } from "../models/publications.model.js";
+
 /**
  * View a publication
  * @function viewPublication
@@ -23,8 +25,11 @@ export const viewPublication = async (req, res) => {
 export const inspiresMe = async (req, res) => {
   try {
     const publication = await Publication.findById(req.params.id);
-    publication.inspiresMe += 1;
+    publication.inspires += 1;
     await publication.save();
+    const author = await Publication.findOne({ username: publication.author });
+    author.inspires += 1;
+    await author.save();
     res.status(200).json(publication);
   } catch (error) {
     res.status(500).json({ message: error.message });

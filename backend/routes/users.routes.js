@@ -1,7 +1,7 @@
 import { Router} from "express";
-import { authenticateToken } from "../middlewares/authenticateToken.middleware.js";
-import { registerUser, loginUser, logoutUser, editUser, shareProfile } from "../controllers/users.controller.js";
-import {viewUser, followOrUnfollowUser, blockUser, reportUser } from "../controllers/other_user.controller.js";
+import { authenticateToken } from "../middlewares/authenticate.middleware.js";
+import { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, editPassword, viewMyProfile, editProfile, shareProfile } from "../controllers/users.controller.js";
+import { viewUser, followOrUnfollowUser, blockUser, reportUser } from "../controllers/other_user.controller.js";
 
 /**
  * Users routes
@@ -27,39 +27,63 @@ routerUsers.post("/login", loginUser);
 routerUsers.post("/:username", authenticateToken, logoutUser);
 
 /**
+ * Forgot password
+ * @method POST
+ */
+routerUsers.post("/forgot-password", forgotPassword);
+
+/**
+ * Reset password
+ * @method POST
+ */
+routerUsers.post("/reset-password/:resetToken", resetPassword);
+
+/**
+ * Edit password
+ * @method PATCH
+ */
+routerUsers.patch("/edit-password/:username", authenticateToken, editPassword);
+
+/**
+ * View my profile
+ * @method GET
+ */
+routerUsers.get("/profile/:username", authenticateToken, viewMyProfile);
+
+/**
  * Edit user profile or user account
  * @method PATCH
  */
-routerUsers.patch("/:username", authenticateToken, editUser);
+routerUsers.patch("/profile/:username/edit", authenticateToken, editProfile);
 
 /**
  * Share profile
  * @method GET
  */
-routerUsers.get("/:username", authenticateToken, shareProfile);
+routerUsers.get("/profile/:username", authenticateToken, shareProfile);
 
 /**
  * View user profile
  * @method GET
  */
-routerUsers.get("/:username", authenticateToken, viewUser);
+routerUsers.get("/profile/:other-username", authenticateToken, viewUser);
 
 /**
  * Follow or unfollow user
  * @method PATCH
  */
-routerUsers.patch("/:username", authenticateToken, followOrUnfollowUser);
+routerUsers.patch("/profile/:other-username", authenticateToken, followOrUnfollowUser);
 
 /**
  * Block or unblock user
  * @method PATCH
  */
-routerUsers.patch("/:username", authenticateToken, blockUser);
+routerUsers.patch("/profile/:other-username", authenticateToken, blockUser);
 
 /**
  * Report User
  * @method PATCH
  */
-routerUsers.patch("/:username", authenticateToken, reportUser);
+routerUsers.patch("/profile/:other-username", authenticateToken, reportUser);
 
 export default routerUsers;

@@ -1,6 +1,7 @@
 import { Router} from "express";
-import { createPublication, editPublication, highlightPublication, deletePublication } from "../controllers/publications.controller.js";
-import { searchPublication, viewPublication, inspiresMe, recommendIt, wantToContribute, sharePublication, reportPublication } from "../controllers/other.publications.controller";
+import { authenticateToken, authorizeRoles } from "../middlewares/authenticate.middleware.js";
+import { createPublication, editPublication, createFeaturedPublication, deletePublication } from "../controllers/publications.controller.js";
+import { viewPublication, inspiresMe, recommendIt, wantToContribute, sharePublication, reportPublication } from "../controllers/other.publications.controller.js";
 
 /**
  * Publications routes
@@ -11,66 +12,60 @@ const routerPublications = Router();
  * Create a new publication
  * @method POST
  */
-routerPublications.post("/publications", createPublication);
+routerPublications.post("/publications", authenticateToken, createPublication);
 
 /**
  * Edit a publication
  * @method PATCH
  */
-routerPublications.patch("/publications/:id", editPublication);
+routerPublications.patch("/publications/:id", authenticateToken, editPublication);
 
 /**
  * Highlight a publication
  * @method PATCH
  */
-routerPublications.patch("/publications/:id", highlightPublication);
+routerPublications.patch("/publications/:id", authenticateToken, authorizeRoles("userpremium"), createFeaturedPublication);
 
 /**
  * Delete a publication
  * @method DELETE
  */
-routerPublications.delete("/publications/:id", deletePublication);
-
-/**
- * Search publication by author, hashtags, content or media
- * @method GET
- */
-routerPublications.get("/publications/search", searchPublication);
+routerPublications.delete("/publications/:id", authenticateToken, deletePublication);
 
 /**
  * View a publication
  * @method GET
  */
-routerPublications.get("/publications/:id", viewPublication);
+routerPublications.get("/publications/:id", authenticateToken, viewPublication);
 
 /**
  * Inspires me" reaction to a publication
  * @method PATCH
  */
-routerPublications.patch("/publications/:id/inspiresMe", inspiresMe);
+routerPublications.patch("/publications/:id/inspiresMe", authenticateToken, inspiresMe);
 
 /**
  * Recommend it" reaction to a publication
  * @method PATCH
  */
-routerPublications.patch("/publications/:id/recommendIt", recommendIt);
+routerPublications.patch("/publications/:id/recommendIt", authenticateToken, recommendIt);
 
 /**
  * Want to contribute" reaction to a publication
  * @method PATCH
  */
-routerPublications.patch("/publications/:id/wantToContribute", wantToContribute);
+routerPublications.patch("/publications/:id/wantToContribute", authenticateToken, wantToContribute);
 
 /**
  * Share publication
  * @method PATCH
  */
-routerPublications.patch("/publications/:id/share", sharePublication);
+routerPublications.patch("/publications/:id/share", authenticateToken, sharePublication);
 
 /**
  * Report a publication
  * @method PATCH
  */
-routerPublications.patch("/publications/:id/report", reportPublication);
+routerPublications.patch("/publications/:id/report", authenticateToken, reportPublication);
 
 export default routerPublications

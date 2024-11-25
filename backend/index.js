@@ -16,12 +16,12 @@ async function connectDB() {
 }
 
 // Cors
-corsOptions = {
-  origin: ["http://localhost:3000"],
-  methods: ["GET", "POST", "PATCH", "DELETE"],
-  optionsSucessStatus: 200
-}
-app.use(cors(corsOptions));
+//corsOptions = {
+//  origin: ["http://localhost:3000"],
+//  methods: ["GET", "POST", "PATCH", "DELETE"],
+//  optionsSucessStatus: 200
+//}
+//app.use(cors(corsOptions));
 
 // routes
 app.use("/users", routerUsers); // use users routes

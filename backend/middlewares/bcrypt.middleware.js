@@ -16,4 +16,10 @@ export const encryptPassword = async (req, res, next) => {
   }
 };
 
-export default { encryptPassword, comparePassword };
+export const comparePassword = async (password, hashedPassword) => {
+  try {
+    return await bcrypt.compare(password, hashedPassword);
+  } catch (error) {
+    return false;
+  }
+};

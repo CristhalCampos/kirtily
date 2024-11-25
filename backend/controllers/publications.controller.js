@@ -38,8 +38,8 @@ export const editPublication = async (req, res) => {
 };
 
 /**
- * Highlight a publication
- * @function highlightPublication
+ * Create a featured publication
+ * @function createFeaturedPublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @param {String} req.params.id - Publication ID
@@ -47,7 +47,7 @@ export const editPublication = async (req, res) => {
  * @method PATCH
  * @example http://localhost:3001/publications/:id
  */
-export const highlightPublication = async (req, res) => {
+export const createFeaturedPublication = async (req, res) => {
   try {
     const publication = await Publication.findByIdAndUpdate(req.params.id, req.body);
     res.status(200).json(publication);

@@ -25,7 +25,7 @@ const verifyUsers = (myUser, otherUser) => {
 export const viewUser = async (req, res) => {
   try {
     const myUser = await User.findOne({ username: req.params.username }, { username: 1, status: 1, deleted: 1, blockedUsers: 1 });
-    const otherUser = await User.findOne({ username: req.body.username }, { status: 1, deleted: 1, fullName: 1, username: 1, profilePicture: 1, bio: 1, interests: 1, followers: 1, following: 1, subscription: 1 });
+    const otherUser = await User.findOne({ username: req.body.username }, { status: 1, deleted: 1, fullName: 1, username: 1, profilePicture: 1, bio: 1, interests: 1, followers: 1, following: 1, inspirations: 1, subscription: 1 });
     if (myUser.username === otherUser.username) {
       return res.status(200).json({ message: "Viewing own profile", user: myUser });
     }

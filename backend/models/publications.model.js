@@ -31,7 +31,7 @@ const publicationSchema = new mongoose.Schema(
     hashtags: [{ type: String }],
     status: [{ type: String, enum: ["active", "reported"], default: "active" }],
     deleted: { type: Boolean, default: false },
-    highlighted: { type: Boolean, default: false }
+    featured: { type: Boolean, default: false }
   },
   { timestamps: true }
 );

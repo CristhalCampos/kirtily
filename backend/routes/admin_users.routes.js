@@ -1,20 +1,29 @@
 import { Router} from "express";
-import { getAllUsers, blockOrUnblockUser, deleteUser } from "../controllers/admin_users.controller";
-import { authenticateToken } from "../middlewares/authenticateToken.middleware";
-import { authorizeRoles } from "../middlewares/authorizeRoles.middleware";
+import { getAllUsers, createUser, editUser, blockOrUnblockUser, deleteUser } from "../controllers/admin_users.controller.js";
+import { authenticateToken, authorizeRoles } from "../middlewares/authenticate.middleware.js";
 
 /**
  * Admin users routes
  */
 const routerAdminUsers = Router();
 
-// Rutas solo para administradores
-
 /**
  * Get all users
  * @method GET
  */
 routerAdminUsers.get("/admin/users", authenticateToken, authorizeRoles("admin"), getAllUsers);
+
+/**
+ * Create a new user
+ * @method POST
+ */
+routerAdminUsers.post("/admin/users", authenticateToken, authorizeRoles("admin"), createUser);
+
+/**
+ * Edit a user
+ * @method PATCH
+ */
+routerAdminUsers.patch("/admin/users", authenticateToken, authorizeRoles("admin"), editUser);
 
 /**
  * Block or unblock user
