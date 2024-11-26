@@ -1,4 +1,4 @@
-import { Publication, Publication } from "../models/publications.model.js";
+import { Publication } from "../models/publications.model.js";
 
 /**
  * Get all publications

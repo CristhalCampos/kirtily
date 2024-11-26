@@ -1,5 +1,7 @@
 import { Router} from "express";
 import { authenticateToken } from "../middlewares/authenticate.middleware.js";
+import { registerValidation, loginValidation } from "../middlewares/validation.middleware.js";
+import { encryptPassword, comparePassword } from "../middlewares/bcrypt.middleware.js";
 import { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, editPassword, viewMyProfile, editProfile, shareProfile } from "../controllers/users.controller.js";
 import { viewUser, followOrUnfollowUser, blockUser, reportUser } from "../controllers/other_user.controller.js";
 
@@ -9,16 +11,16 @@ import { viewUser, followOrUnfollowUser, blockUser, reportUser } from "../contro
 const routerUsers = Router();
 
 /**
- * Register user
- * @method POST
- */
-routerUsers.post("/register", registerUser);
-
-/**
  * Login user
  * @method POST
  */
-routerUsers.post("/login", loginUser);
+routerUsers.post("/", loginValidation, loginUser);
+
+/**
+ * Register user
+ * @method POST
+ */
+routerUsers.post("/register", registerValidation, encryptPassword, registerUser);
 
 /**
  * Logout user

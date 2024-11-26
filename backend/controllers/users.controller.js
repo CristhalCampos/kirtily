@@ -1,4 +1,4 @@
-import { User, User } from "../models/users.model.js";
+import { User } from "../models/users.model.js";
 import { transporter } from "../middlewares/nodemailer.middleware.js";
 import { registerValidation, loginValidation, passwordValidation } from "../middlewares/validation.middleware.js";
 import { encryptPassword, comparePassword } from "../middlewares/bcrypt.middleware.js";
@@ -20,11 +20,10 @@ import { generateAccessToken, generateResetToken } from "../middlewares/token.mi
  */
 export const registerUser = async (req, res) => {
   try {
-    const userExists = await User.findOne({ email: req.body.email });
-    if (userExists) return res.status(400).json({ error: "User already exists" });
-    await registerValidation(req, res);
-    const hashedPassword = await encryptPassword(req, res);
-    req.body.password = hashedPassword;
+    const emailExists = await User.findOne({ email: req.body.email }, { email: 1 });
+    if (emailExists) return res.status(400).json({ error: "User already exists" });
+    const usernameExists = await User.findOne({ username: req.body.username }, { username: 1 });
+    if (usernameExists) return res.status(400).json({ error: "User already exists" });
     await User.insert({fullName: req.body.fullName, username: req.body.username, email: req.body.email, password: req.body.password});
     res.status(201).json("User registered");
   } catch (error) {
@@ -47,12 +46,10 @@ export const registerUser = async (req, res) => {
  */
 export const loginUser = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email }, { id: 1, username: 1, password: 1, role: 1, status: 1, deleted: 1 });
     if (!user) return res.status(400).json({ error: "User not found" });
     if (user.status === "blocked" || user.deleted) return res.status(403).json({ error: "User is blocked or has been deleted" });
-    await loginValidation(req, res);
-    const isMatch = await comparePassword(req.body.password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Incorrect password" });
+    await comparePassword(req.body.password, user.password);
     generateAccessToken(user);
     res.status(200).json("User logged in");
   } catch (error) {
@@ -87,7 +84,7 @@ export const logoutUser = async (req, res) => {
  */
 export const forgotPassword = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email }, { email: 1 });
     if (!user) return res.status(404).json({ error: "User not found" });
     const resetToken = await generateResetToken(user);
     const resetLink = `http://localhost:3001/reset-password/${resetToken}`;
@@ -123,7 +120,7 @@ export const resetPassword = async (req, res) => {
     const user = await User.findOne({ email: decoded.email }, { _id: 1 });
     if (!user) return res.status(404).json({ error: "User not found" });
     await passwordValidation(req, res);
-    hashedPassword = await encryptPassword(req, res);
+    await encryptPassword(req, res);
     await User.updateOne({ _id: user._id }, { $set: { password: hashedPassword } });
     res.status(200).json("Password reset");
   } catch (error) {
@@ -176,7 +173,7 @@ export const viewMyProfile = async (req, res) => {
 }
 
 /**
- * Edit user profile
+ * Edit my profile
  * @function editProfile
  * @param {Object} req - Request object
  * @param {Object} res - Response object

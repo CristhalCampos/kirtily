@@ -1,3 +1,4 @@
+import { User } from "../models/users.model.js";
 import bcrypt from "bcrypt";
 import { config } from "dotenv";
 config({ path: "./config/.env" });
