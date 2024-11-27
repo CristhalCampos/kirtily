@@ -2,13 +2,14 @@ import { Comment } from "../models/comments.model.js";
 
 /**
  * Get all comments
+ * @function getAllComments
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @returns {Object} - List of comments
  * @method GET
  * @example http://localhost:3001/admin/comments
  */
-export const getComments = async (req, res) => {
+export const getAllComments = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
     const comments = await Comment.paginate({ deleted: false }, { page, limit });
@@ -20,6 +21,7 @@ export const getComments = async (req, res) => {
 
 /**
  * Delete comment
+ * @function deleteComment
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @returns {Object} - Message

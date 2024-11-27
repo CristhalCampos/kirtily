@@ -7,7 +7,7 @@ import { Publication } from "../models/publications.model.js";
  * @param {Object} res - Response object
  * @param {String} req.params.id - Publication ID
  * @returns {Object} - Updated publication
- * @method PATCH
+ * @method GET
  * @example http://localhost:3001/publications/:id
  */
 export const viewPublication = async (req, res) => {

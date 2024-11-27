@@ -21,7 +21,6 @@ import mongoosePaginate from "mongoose-paginate-v2";
 const publicationSchema = new mongoose.Schema(
   {
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    title: { type: String },
     content: { type: String },
     media: [{ type: String }],
     inspires: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],

@@ -17,13 +17,13 @@ routerAdminUsers.get("/admin/users", authenticateToken, authorizeRoles("admin"),
  * Create a new user
  * @method POST
  */
-routerAdminUsers.post("/admin/users", authenticateToken, authorizeRoles("admin"), createUser);
+routerAdminUsers.post("/admin/users/create", authenticateToken, authorizeRoles("admin"), createUser);
 
 /**
  * Edit a user
  * @method PATCH
  */
-routerAdminUsers.patch("/admin/users", authenticateToken, authorizeRoles("admin"), editUser);
+routerAdminUsers.patch("/admin/users/edit", authenticateToken, authorizeRoles("admin"), editUser);
 
 /**
  * Block or unblock user
