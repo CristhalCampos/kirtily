@@ -67,7 +67,7 @@ export const createNotification = async (
         type: ["follower"],
         refModel: "User",
         refId: otherUser,
-        content: "You have a new follower"
+        content: `${otherUser.username} is following you`
       });
       await notification.save();
     } else if (refModel === "Publication" && comment) {
@@ -80,14 +80,26 @@ export const createNotification = async (
       });
       await notification.save();
     } else if (refModel === "Publication" && otherPublication) {
-      const notification = new Notification({
-        user,
-        type: ["publication"],
-        refModel: "Publication",
-        refId: otherPublication,
-        content: `${otherUser.username} has created a new publication`
-      });
-      await notification.save();
+      user.followers.forEach(async (follower) => {
+        if (publication.highlight) {
+          const notification = new Notification({
+            user: follower,
+            type: ["publication"],
+            refModel: "Publication",
+            refId: otherPublication,
+            content: `${otherUser.username} has created a highlight publication`
+          })
+          await notification.save();
+        }
+        const notification = new Notification({
+          user: follower,
+          type: ["publication"],
+          refModel: "Publication",
+          refId: otherPublication,
+          content: `${otherUser.username} has created a new publication`
+        });
+        await notification.save();
+      })
     } else if (refModel === "Message") {
       const notification = new Notification({
         user,

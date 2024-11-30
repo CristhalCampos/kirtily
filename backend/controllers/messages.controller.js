@@ -1,24 +1,30 @@
 import { Message } from "../models/messages.model.js";
+import { User } from "../models/users.model.js";
+import { createNotification } from "./notifications.controller.js";
 
-//Generate room id
-const generateRoomId = (user1, user2) => {
-  return [user1, user2].sort().join("_");
-};
+export const joinRooms = async (req, res, io) => {
+  try {
+  const user = await User.findOne({ username: req.body.username });
 
-/**
- * Join your rooms
- * @function joinRooms
- * @param {Object} socket - Socket object
- * @param {Object} user - User object
- * @method POST
- * @example http://localhost:3001/messages
- */
-export const joinRooms = (socket, user) => {
-  const contacts = [...user.following];
-  contacts.forEach((contact) => {
-    const roomId = generateRoomId(user._id, contact);
-    socket.join(roomId);
+  if (!user || !user.following) {
+    return res.status(400).json({ error: "User not found" });
+  }
+
+  const rooms = [];
+  user.following.forEach((contact) => {
+    const roomId = await [user._id, contact].sort().join("_");
+    rooms.push(roomId);
   });
+
+  // Emitir un evento para unir al cliente a las salas
+  rooms.forEach((room) => {
+    io.sockets.sockets.get(req.body.socketId)?.join(room);
+  });
+
+  res.status(200).json({ message: "Salas unidas con éxito", rooms });
+  } catch (error) {
+    res.status(500).json({ error: "Error al unir las salas" });
+  }
 };
 
 /**
@@ -33,7 +39,7 @@ export const joinRooms = (socket, user) => {
 export const getMessagesByRoom = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
-    const messages = await Message.paginate({ room: req.params.room }, { page, limit });
+    const messages = await Message.paginate({ room: req.params.roomId }, { page, limit });
     return res.status(200).json(messages);
   } catch (error) {
     error.name === "CastError"
@@ -53,30 +59,19 @@ export const getMessagesByRoom = async (req, res) => {
  */
 export const sendMessage = async (req, res) => {
   try {
-    if (!req.body.room || !req.body.sender || !req.body.receiver || !req.body.content) {
+    if (!req.params.roomId || !req.body.sender || !req.body.receiver || !req.body.content) {
       return res.status(400).json({ error: "Missing data" });
     }
     const message = new Message(req.body);
     await message.save();
+    //notificarle al otro usuario que ha recibido el mensaje
+    await createNotification("Message", req.body.receiver, req.body.sender, null, null, null, null, message);
     return res.status(200).json("Message sent");
   } catch (error) {
     error.name === "ValidationError"
       ? res.status(400).json({ error: error.message })
       : res.status(500).json({ error: "Internal server error" });
   }
-}
-
-/**
- * Listen to a new message
- * @function listenToMessage
- * @param {Object} socket - Socket object
- * @param {Object} message - Message object
- * @returns {Object} - Message
- * @method POST
- * @example http://localhost:3001/messages
- */
-export const listenToMessage = (socket, message) => {
-  socket.to(message.room).emit("message", message);
 }
 
 /**
@@ -90,7 +85,7 @@ export const listenToMessage = (socket, message) => {
  */
 export const markAsRead = async (req, res) => {
   try {
-    await Message.findByIdAndUpdate(req.params.id, { read: true });
+    await Message.findByIdAndUpdate(req.body.id, { read: true });
     return res.status(200).json("Message marked as read");
   } catch (error) {
     error.name === "CastError"

@@ -1,5 +1,6 @@
 import { Publication } from "../models/publications.model.js";
 import { User } from "../models/users.model.js";
+import { createNotification } from "./notifications.controller.js";
 
 /**
  * View my publication
@@ -30,18 +31,23 @@ export const viewMyPublication = async (req, res) => {
  * @function createPublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object
- * @returns {Object} - Created publication
+ * @returns {String} - Message
  * @method POST
  * @example http://localhost:3001/publications
  */
 export const createPublication = async (req, res) => {
   try {
+    user = await User.findOne({ username: req.user.username }, { _id: 1, username: 1, status: 1, deleted: 1, followers: 1 });
+    if (user.status === "blocked" || user.deleted) {
+      return res.status(403).json({ error: "User is blocked or has been deleted" });
+    }
     if (req.file) {
       req.body.media = req.file.path;
     }
     const publication = new Publication(req.body);
     await publication.save();
     await User.findByIdAndUpdate(req.user._id, { $push: { publications: publication._id } });
+    await createNotification("Publication", user.followers, user, null, publication);
     res.status(201).json("Publication created");
   } catch (error) {
     error.name === "ValidationError"
@@ -56,7 +62,7 @@ export const createPublication = async (req, res) => {
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @param {String} req.params.id - Publication ID
- * @returns {Object} - Updated publication
+ * @returns {String} - Message
  * @method PATCH
  * @example http://localhost:3001/publications/:id
  */
@@ -70,6 +76,7 @@ export const editPublication = async (req, res) => {
       req.body.media = req.file.path;
     }
     await Publication.findByIdAndUpdate(req.params.id, req.body);
+    await createNotification("Publication", user.followers, user, null, publication);
     res.status(200).json("Publication updated");
   } catch (error) {
     error.name === "CastError"
@@ -84,7 +91,7 @@ export const editPublication = async (req, res) => {
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @param {String} req.params.id - Publication ID
- * @returns {Object} - Updated publication
+ * @returns {String} - Message
  * @method PATCH
  * @example http://localhost:3001/publications/:id
  */
@@ -99,7 +106,7 @@ export const createHighlightPublication = async (req, res) => {
     }
     await Publication.findByIdAndUpdate(req.params.id, { highlight: true });
     await User.findByIdAndUpdate(publication.author, { $push: { highlights: publication._id } });
-    res.status(200).json(publication);
+    res.status(200).json("Publication highlighted");
   } catch (error) {
     error.name === "CastError"
       ? res.status(400).json({ error: error.message })
@@ -142,7 +149,7 @@ export const getPublicationsByUser = async (req, res) => {
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @param {String} req.params.id - Publication ID
- * @returns {Object} - Deleted publication
+ * @returns {String} - Message
  * @method DELETE
  * @example http://localhost:3001/publications/:id
  */

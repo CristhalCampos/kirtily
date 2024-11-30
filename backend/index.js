@@ -14,46 +14,20 @@ import routerAdminUsers from "./routes/admin_users.routes.js";
 import routerAdminPublications from "./routes/admin_publications.routes.js";
 import routerAdminComments from "./routes/admin_comments.routes.js";
 import routerAdminTransactions from "./routes/admin_transactions.routes.js";
+import routerMessages from "./routes/messages.routes.js";
+import { initializeSocket } from "./socket/socket.js";
 const app = express(); // create the server using express
 const port = process.env.PORT; // create a port
 app.use(json()); // middleware to parse json
 const server = createServer(app);
-const io = Server(server);
+const io = new Server(server, {cors: {origin: ["http://localhost:3000"]}});
+
 
 // use mongoose to connect to mongoDB
 connectDB().catch(err => console.log(err));
 async function connectDB() {
   await mongoose.connect(process.env.DATABASE);
 }
-
-// Config socket.io
-io.on('connection', (socket) => {
-  console.log('User connected:', socket.id);
-
-  // Unir al usuario a todas sus salas de chat
-  socket.on('joinRooms', (rooms) => {
-    rooms.forEach(room => {
-      socket.join(room); // Unir a la sala
-      console.log(`Usuario ${socket.id} se unió a la sala: ${room}`);
-    });
-  });
-
-  // Manejar envío de mensaje
-  socket.on('sendMessage', async (data) => {
-    const { roomId, sender, receiver, content } = data;
-
-    // Guardar el mensaje en la base de datos
-    const newMessage = new Message({ roomId, sender, receiver, content });
-    await newMessage.save();
-
-    // Emitir el mensaje a los usuarios de la sala
-    io.to(roomId).emit('receiveMessage', newMessage);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
-  });
-});
 
 // Cors
 //corsOptions = {
@@ -73,8 +47,10 @@ app.use("/admin/users", routerAdminUsers);
 app.use("/admin/publications", routerAdminPublications);
 app.use("/admin/comments", routerAdminComments);
 app.use("/admin/transacciones", routerAdminTransactions);
+app.use("/messages", routerMessages);
 
 // start the server
+initializeSocket(io);
 server.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });

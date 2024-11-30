@@ -1,4 +1,5 @@
 import { User } from "../models/users.model.js";
+import { createNotification } from "./notifications.controller.js";
 
 // Verify that users is not blocked or deleted
 const verifyUsers = (myUser, otherUser) => {
@@ -68,6 +69,7 @@ export const followOrUnfollowUser = async (req, res) => {
       await User.findOneAndUpdate({ _id: myUser._id }, { following: myUser.following });
       otherUser.followers.push(myUser._id);
       await User.findOneAndUpdate({ _id: otherUser._id }, { followers: otherUser.followers });
+      await createNotification("User", otherUser, myUser);
       return res.status(200).json("User followed");
     }
   } catch (error) {

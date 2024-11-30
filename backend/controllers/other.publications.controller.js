@@ -35,12 +35,12 @@ export const viewPublication = async (req, res) => {
  */
 export const inspiresMe = async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.params.username }, { _id: 1, username: 1, status: 1, deleted: 1 });
     const publication = await Publication.findById(req.body.id);
     if (!publication) {
       return res.status(404).json({ error: "Publication not found" });
     }
-    const author = await Publication.findOne({ username: publication.author });
+    const user = await User.findOne({ username: req.params.username }, { _id: 1, username: 1, status: 1, deleted: 1 });
+    const author = await Publication.findOne({ username: publication.author }, { _id: 1, username: 1, status: 1, deleted: 1, blokedUsers: 1 });
     if (user.status === "blocked" || user.deleted || author.blokedUsers.includes(user._id)) {
       return res.status(403).json({ error: "User is blocked or has been deleted" });
     }
@@ -48,7 +48,7 @@ export const inspiresMe = async (req, res) => {
     await publication.save();
     author.inspires += 1;
     await author.save();
-    await createNotification(refModel="Publication", user=author, otherUser=user.username, publication=publication, reaction="inspiresMe");
+    await createNotification("Publication", author, user.username, publication, null, null, reaction="inspiresMe");
     res.status(200).json("Has reacted to this publication");
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -67,16 +67,16 @@ export const inspiresMe = async (req, res) => {
 export const recommendIt = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username }, { _id: 1, username: 1, status: 1, deleted: 1 });
+    if (user.status === "blocked" || user.deleted || publication.author.blokedUsers.includes(user._id)) {
+      return res.status(403).json({ error: "User is blocked or has been deleted" });
+    }
     const publication = await Publication.findById(req.body.id);
     if (!publication) {
       return res.status(404).json({ error: "Publication not found" });
     }
-    if (user.status === "blocked" || user.deleted || publication.author.blokedUsers.includes(user._id)) {
-      return res.status(403).json({ error: "User is blocked or has been deleted" });
-    }
     publication.recommends += 1;
     await publication.save();
-    await createNotification(refModel="Publication", user=publication.author, otherUser=user.username, publication=publication, reaction="recommendIt");
+    await createNotification("Publication", publication.author, user.username, publication, null, null, reaction="recommendIt");
     res.status(200).json("Has reacted to this publication");
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -95,16 +95,16 @@ export const recommendIt = async (req, res) => {
 export const wantToContribute = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username }, { _id: 1, username: 1, status: 1, deleted: 1 });
+    if (user.status === "blocked" || user.deleted || publication.author.blokedUsers.includes(user._id)) {
+      return res.status(403).json({ error: "User is blocked or has been deleted" });
+    }
     const publication = await Publication.findById(req.body.id);
     if (!publication) {
       return res.status(404).json({ error: "Publication not found" });
     }
-    if (user.status === "blocked" || user.deleted || publication.author.blokedUsers.includes(user._id)) {
-      return res.status(403).json({ error: "User is blocked or has been deleted" });
-    }
     publication.wantsToContribute += 1;
     await publication.save();
-    await createNotification(refModel="Publication", user=publication.author, publication=publication, reaction="wantToContribute");
+    await createNotification("Publication", publication.author, user.username, publication, null, null, reaction="wantToContribute");
     res.status(200).json("Has reacted to this publication");
   } catch (error) {
     res.status(500).json({ message: error.message });
