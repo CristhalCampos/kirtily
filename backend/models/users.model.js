@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema(
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     inspirations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Publication" }],
     publications: [{ type: mongoose.Schema.Types.ObjectId, ref: "Publication" }],
+    highlights: [{ type: mongoose.Schema.Types.ObjectId, ref: "Publication" }],
     subscription: { type: mongoose.Schema.Types.ObjectId, ref: "Subscription" },
     deleted: { type: Boolean, default: false },
     blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]

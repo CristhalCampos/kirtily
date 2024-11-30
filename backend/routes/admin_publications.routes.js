@@ -1,6 +1,6 @@
 import { Router} from "express";
 import { authenticateToken, authorizeRoles } from "../middlewares/authenticate.middleware.js";
-import { getAllPublications, deletePublication } from "../controllers/admin_publications.controller";
+import { getAllPublications, deletePublication } from "../controllers/admin_publications.controller.js";
 
 /**
  * Admin publications routes

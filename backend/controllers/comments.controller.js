@@ -1,4 +1,4 @@
-import { Comments } from "../models/comments.model.js";
+import { Comment } from "../models/comments.model.js";
 import { Publication } from "../models/publications.model.js";
 
 /**

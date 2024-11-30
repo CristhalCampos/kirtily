@@ -1,3 +1,4 @@
+import { string } from "joi";
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
@@ -12,6 +13,7 @@ import mongoosePaginate from "mongoose-paginate-v2";
  */
 const messageSchema = new mongoose.Schema(
   {
+    roomId: { type: string, required: true },
     sender: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     receiver: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     content: { type: String, required: true },

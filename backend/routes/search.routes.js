@@ -1,5 +1,5 @@
 import { Router} from "express";
-import { authenticateToken } from "../middlewares/authenticateToken.middleware.js";
+import { authenticateToken } from "../middlewares/authenticate.middleware.js";
 import { searchUser, searchPublication } from "../controllers/search.controller.js";
 
 /**

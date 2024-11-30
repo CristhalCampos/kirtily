@@ -130,7 +130,7 @@ export const deleteUser = async (req, res) => {
     if (!userExists) return res.status(404).json({ error: "User not found" });
     if (userExists.deleted) return res.status(403).json({ error: "User has been deleted" });
     await User.findOneAndUpdate(
-      { _id: req.params.id },
+      { username: req.params.username },
       { deleted: true }
     );
     res.status(200).json("User deleted");
