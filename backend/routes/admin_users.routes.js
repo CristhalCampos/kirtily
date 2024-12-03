@@ -1,6 +1,6 @@
 import { Router} from "express";
 import { getAllUsers, createUser, editUser, blockOrUnblockUser, deleteUser } from "../controllers/admin_users.controller.js";
-import { authenticateToken, authorizeRoles } from "../middlewares/authenticate.middleware.js";
+import { authorizeRole } from "../middlewares/authenticate.middleware.js";
 
 /**
  * Admin users routes
@@ -11,30 +11,30 @@ const routerAdminUsers = Router();
  * Get all users
  * @method GET
  */
-routerAdminUsers.get("/admin/users", authenticateToken, authorizeRoles("admin"), getAllUsers);
+routerAdminUsers.get("/admin/users", authorizeRole(["admin"]), getAllUsers);
 
 /**
  * Create a new user
  * @method POST
  */
-routerAdminUsers.post("/admin/users/create", authenticateToken, authorizeRoles("admin"), createUser);
+routerAdminUsers.post("/admin/users/create", authorizeRole(["admin"]), createUser);
 
 /**
  * Edit a user
  * @method PATCH
  */
-routerAdminUsers.patch("/admin/users/edit", authenticateToken, authorizeRoles("admin"), editUser);
+routerAdminUsers.patch("/admin/users/edit", authorizeRole(["admin"]), editUser);
 
 /**
  * Block or unblock user
  * @method PATCH
  */
-routerAdminUsers.patch("/admin/users", authenticateToken, authorizeRoles("admin"), blockOrUnblockUser);
+routerAdminUsers.patch("/admin/users", authorizeRole(["admin"]), blockOrUnblockUser);
 
 /**
  * Delete user
  * @method DELETE
  */
-routerAdminUsers.delete("/admin/users", authenticateToken, authorizeRoles("admin"), deleteUser);
+routerAdminUsers.delete("/admin/users", authorizeRole(["admin"]), deleteUser);
 
 export default routerAdminUsers;

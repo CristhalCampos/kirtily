@@ -1,5 +1,5 @@
 import { Router} from "express";
-import { authenticateToken, authorizeRoles } from "../middlewares/authenticate.middleware.js";
+import { authorizeRole } from "../middlewares/authenticate.middleware.js";
 import { usersStatistics, publicationsStatistics, transactionsStatistics, commentsStatistics } from "../controllers/admin.controller.js";
 
 /**
@@ -7,6 +7,6 @@ import { usersStatistics, publicationsStatistics, transactionsStatistics, commen
  */
 const routerAdmin = Router();
 
-routerAdmin.get("/admin", authenticateToken, authorizeRoles("admin"), usersStatistics, publicationsStatistics, transactionsStatistics, commentsStatistics);
+routerAdmin.get("/admin", authorizeRole(["admin"]), usersStatistics, publicationsStatistics, transactionsStatistics, commentsStatistics);
 
 export default routerAdmin;

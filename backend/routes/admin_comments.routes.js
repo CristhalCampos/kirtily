@@ -1,5 +1,5 @@
 import { Router} from "express";
-import { authenticateToken, authorizeRoles } from "../middlewares/authenticate.middleware.js";
+import { authorizeRole } from "../middlewares/authenticate.middleware.js";
 import { getAllComments, deleteComment } from "../controllers/admin_comments.controller.js";
 
 /**
@@ -11,12 +11,12 @@ const routerAdminComments = Router();
  * Get all comments
  * @method GET
  */
-routerAdminComments.get("/admin/comments", authenticateToken, authorizeRoles("admin"), getAllComments);
+routerAdminComments.get("/admin/comments", authorizeRole(["admin"]), getAllComments);
 
 /**
  * Delete comment
  * @method DELETE
  */
-routerAdminComments.delete("/admin/comments/:id", authenticateToken, authorizeRoles("admin"), deleteComment);
+routerAdminComments.delete("/admin/comments/:id", authorizeRole(["admin"]), deleteComment);
 
 export default routerAdminComments;

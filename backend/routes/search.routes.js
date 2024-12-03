@@ -1,5 +1,5 @@
 import { Router} from "express";
-import { authenticateToken } from "../middlewares/authenticate.middleware.js";
+import { authorizeRole } from "../middlewares/authenticate.middleware.js";
 import { searchUser, searchPublication } from "../controllers/search.controller.js";
 
 /**
@@ -11,12 +11,12 @@ const routerSearch = Router();
  * Search user by full name, username, bio or any of interests
  * @method GET
  */
-routerSearch.get("/search", authenticateToken, searchUser);
+routerSearch.get("/search", authorizeRole(["user", "userPremium", "admin"]), searchUser);
 
 /**
  * Search publication by author, hashtags, content or media
  * @method GET
  */
-routerSearch.get("/search", authenticateToken, searchPublication);
+routerSearch.get("/search", authorizeRole(["user", "userPremium", "admin"]), searchPublication);
 
 export default routerSearch;

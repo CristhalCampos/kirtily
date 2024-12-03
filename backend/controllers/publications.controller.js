@@ -1,6 +1,7 @@
 import { Publication } from "../models/publications.model.js";
 import { User } from "../models/users.model.js";
 import { createNotification } from "./notifications.controller.js";
+import { validatePublication } from "../validation/publications.validation.js";
 
 /**
  * View my publication
@@ -41,12 +42,14 @@ export const createPublication = async (req, res) => {
     if (user.status === "blocked" || user.deleted) {
       return res.status(403).json({ error: "User is blocked or has been deleted" });
     }
-    if (req.file) {
-      req.body.media = req.file.path;
+    const { error } = validatePublication(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
     }
-    const publication = new Publication(req.body);
-    await publication.save();
-    await User.findByIdAndUpdate(req.user._id, { $push: { publications: publication._id } });
+    const mediaPaths = req.files.map((file) => file.path);
+    const newPublication = new Publication({ ...req.body, media: mediaPaths });
+    await newPublication.save();
+    await User.findByIdAndUpdate(user._id, { $push: { publications: newPublication._id } });
     await createNotification("Publication", user.followers, user, null, publication);
     res.status(201).json("Publication created");
   } catch (error) {

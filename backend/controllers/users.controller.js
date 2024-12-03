@@ -1,11 +1,10 @@
-import { User } from "../models/users.model.js";
-import { transporter } from "../middlewares/nodemailer.middleware.js";
-import { registerValidation, loginValidation, passwordValidation } from "../middlewares/validation.middleware.js";
-import { generateAccessToken, generateResetToken } from "../middlewares/token.middleware.js";
 import bcrypt from "bcrypt";
 import { config } from "dotenv";
 config({ path: "./config/.env" });
-
+import { User } from "../models/users.model.js";
+import { transporter } from "../middlewares/nodemailer.middleware.js";
+import { generateTokens, generateResetToken } from "../middlewares/tokens.middleware.js";
+import { validateProfile } from "../middlewares/validations.middleware.js";
 
 /**
  * Register user
@@ -60,8 +59,11 @@ export const loginUser = async (req, res) => {
     if (user.status === "blocked" || user.deleted) {
       return res.status(403).json({ error: "User is blocked or has been deleted" });
     }
-    await bcrypt.compare(req.body.password, user.password);
-    //generateAccessToken(user);
+    const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+    generateTokens(user, res);
     res.status(200).json("User logged in");
   } catch (error) {
     error.name === "ValidationError"
@@ -99,16 +101,18 @@ export const forgotPassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    const resetToken = await generateResetToken(user);
-    const resetLink = `http://localhost:3001/reset-password/${resetToken}`;
+    const resetToken = generateResetToken(user);
+    const resetLink = `http://localhost:${process.env.PORT}/reset-password/${resetToken}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: user.email,
-      subject: "Reset password",
-      html: `<p>Hello,</p>
-             <p>You requested to reset your password. Please click the link below to reset it:</p>
-             <a href="${resetLink}">${resetLink}</a>
-             <p>This link will expire soon.</p>`,
+      subject: "Reset Password Request",
+      html: `
+        <p>Hello,</p>
+        <p>You requested to reset your password. Click the link below to reset it:</p>
+        <a href="${resetLink}">${resetLink}</a>
+        <p>This link will expire in 1 hour.</p>
+      `,
     };
     await transporter.sendMail(mailOptions);
     res.status(200).json("Reset link sent to email");
@@ -131,21 +135,23 @@ export const forgotPassword = async (req, res) => {
  */
 export const resetPassword = async (req, res) => {
   try {
-    const decoded = jwt.verify(req.params.token, process.env.JWT_SECRET);
-    const user = await User.findOne({ email: decoded.email }, { _id: 1 });
-    if (!user) return res.status(404).json({ error: "User not found" });
-    if (req.body.password) {
-      req.body.password = await bcrypt.hash(req.body.password, parseInt(process.env.SALT_ROUNDS));
+    const decoded = jwt.verify(req.paramstoken, process.env.JWT_RESET_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
-    delete req.body.confirmPassword;
-    await User.findByIdAndUpdate(user._id, req.body);
-    res.status(200).json("Password reset");
+    const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
+    user.password = hashedPassword;
+    await user.save();
+    res.status(200).json("Password reset successfully");
   } catch (error) {
-    error.name === "ValidationError"
-      ? res.status(400).json({ error: error.message })
-      : res.status(500).json({ error: "Internal server error" });
+    if (error.name === "TokenExpiredError") {
+      res.status(400).json({ error: "Reset token has expired" });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
   }
-}
+};
 
 /**
  * View my account
@@ -242,6 +248,10 @@ export const editProfile = async (req, res) => {
     const user = await User.findOne({ username: req.params.username }, { _id: 1, status: 1, deleted: 1 });
     if (!user) return res.status(404).json({ error: "User not found" });
     if (user.status === "blocked" || user.deleted) return res.status(403).json({ error: "User is blocked or has been deleted" });
+    const { error } = validateEditProfile(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
     if (req.file) {
       req.body.profilePicture = req.file.path;
     }

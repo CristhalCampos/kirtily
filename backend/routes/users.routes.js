@@ -1,9 +1,9 @@
 import { Router} from "express";
-import { authenticateToken, authorizeRoles } from "../middlewares/authenticate.middleware.js";
-import { registerValidation, loginValidation, passwordValidation } from "../middlewares/validation.middleware.js";
+import { authorizeRole } from "../middlewares/authenticate.middleware.js";
+import { registerValidation, loginValidation, forgotValidation, resetValidation, editValidation } from "../middlewares/validations.middleware.js";
 import { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, viewAccount, editPassword, viewMyProfile, editProfile, shareProfile } from "../controllers/users.controller.js";
 import { viewUser, followOrUnfollowUser, blockUser, reportUser } from "../controllers/other_user.controller.js";
-import { uploadImage } from "../middlewares/uploadImage.middleware.js";
+import { dynamicUpload } from "../middlewares/dynamicUpload.middleware.js";
 
 /**
  * Users routes
@@ -26,74 +26,72 @@ routerUsers.post("/register", registerValidation, registerUser);
  * Logout user
  * @method POST
  */
-routerUsers.post("/account/:username", authenticateToken, logoutUser);
+routerUsers.post("/account/:username", authorizeRole(["user", "userPremium", "admin"]), logoutUser);
 
 /**
  * Forgot password
  * @method POST
  */
-routerUsers.post("/forgot-password", forgotPassword);
+routerUsers.post("/forgot-password", forgotValidation, forgotPassword);
 
 /**
  * Reset password
  * @method POST
  */
-routerUsers.post("/reset-password/:resetToken", passwordValidation, resetPassword);
+routerUsers.post("/reset-password/:resetToken", resetValidation, resetPassword);
 
 /**
  * View account
  * @method GET
  */
-routerUsers.get("/account/:username", authenticateToken, viewAccount);
+routerUsers.get("/account/:username", authorizeRole(["user", "userPremium", "admin"]), viewAccount);
 
 /**
  * Edit password
  * @method PATCH
  */
-routerUsers.patch("/account/edit-password/:username", authenticateToken, passwordValidation, editPassword);
+routerUsers.patch("/account/edit-password/:username", authorizeRole(["user", "userPremium", "admin"]), editValidation, editPassword);
 
 /**
  * View my profile
  * @method GET
  */
-//routerUsers.get("/profile/:username", authenticateToken, viewMyProfile);
-routerUsers.get("/profile/:username", viewMyProfile);
+routerUsers.get("/profile/:username", authorizeRole(["user", "userPremium", "admin"]), viewMyProfile);
 
 /**
- * Edit user profile or user account
+ * Edit user profile
  * @method PATCH
  */
-//routerUsers.patch("/profile/edit/:username", authenticateToken, editProfile);
-routerUsers.patch("/profile/edit/:username", uploadImage.single("profilePicture"), editProfile);
+routerUsers.patch("/profile/edit/:username", dynamicUpload, editProfile);
 
 /**
  * Share profile
  * @method GET
  */
-routerUsers.get("/profile/:username", authenticateToken, shareProfile);
+routerUsers.get("/profile/:username", authorizeRole(["user", "userPremium", "admin"]), shareProfile);
 
 /**
  * View user profile
  * @method GET
  */
-routerUsers.get("/profile/:other-username", authenticateToken, viewUser);
+routerUsers.get("/profile/:other-username", authorizeRole(["user", "userPremium", "admin"]), viewUser);
 
 /**
  * Follow or unfollow user
  * @method PATCH
  */
-routerUsers.patch("/profile/:other-username", authenticateToken, followOrUnfollowUser);
+routerUsers.patch("/profile/:other-username", authorizeRole(["user", "userPremium", "admin"]), followOrUnfollowUser);
 
 /**
  * Block or unblock user
  * @method PATCH
  */
-routerUsers.patch("/profile/:other-username", authenticateToken, blockUser);
+routerUsers.patch("/profile/:other-username", authorizeRole(["user", "userPremium", "admin"]), blockUser);
 
 /**
  * Report User
  * @method PATCH
  */
-routerUsers.patch("/profile/:other-username", authenticateToken, reportUser);
+routerUsers.patch("/profile/:other-username", authorizeRole(["user", "userPremium", "admin"]), reportUser);
 
 export default routerUsers;
