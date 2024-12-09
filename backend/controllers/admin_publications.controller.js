@@ -5,9 +5,11 @@ import { Publication } from "../models/publications.model.js";
  * @function getAllPublications
  * @param {Object} req - Request object
  * @param {Object} res - Response object
+ * @query {Number} page - Page number
+ * @query {Number} limit - Limit of publications
  * @returns {Object} - List of publications
  * @method GET
- * @example http://localhost:3001/admin/publications
+ * @example http://localhost:3001/admin/publications?page=1&limit=10
  */
 export const getAllPublications = async (req, res) => {
   try {
@@ -15,7 +17,9 @@ export const getAllPublications = async (req, res) => {
     const publications = await Publication.paginate({ deleted: false }, { page, limit });
     res.status(200).json(publications);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    error === "ValidationError"
+      ? res.status(400).json({ error: error.message })
+      : res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -24,20 +28,22 @@ export const getAllPublications = async (req, res) => {
  * @function deletePublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object
- * @param {String} req.params.id - Publication ID
+ * @param {String} req.body.id - Publication ID
  * @returns {Object} - Message
  * @method DELETE
- * @example http://localhost:3001/admin/publications/:id
+ * @example http://localhost:3001/admin/publications
  */
 export const deletePublication = async (req, res) => {
   try {
-    const publication = await Publication.findById(req.params.id);
+    const publication = await Publication.findById(req.body.id);
     if (!publication) return res.status(404).json({ message: "Publication not found" });
     publication.deleted = true;
     await publication.save();
-    await Publication.findOneAndUpdate({ _id: req.params.id }, { deleted: true });
+    await Publication.findByIdAndUpdate(req.body.id, { deleted: true });
     res.status(200).json("Publication deleted");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    error === "CastError"
+      ? res.status(400).json({ error: error.message })
+      : res.status(500).json({ error: "Internal server error" });
   }
 };

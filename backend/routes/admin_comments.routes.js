@@ -17,6 +17,6 @@ routerAdminComments.get("/admin/comments", authorizeRole(["admin"]), getAllComme
  * Delete comment
  * @method DELETE
  */
-routerAdminComments.delete("/admin/comments/:id", authorizeRole(["admin"]), deleteComment);
+routerAdminComments.delete("/admin/comments", authorizeRole(["admin"]), deleteComment);
 
 export default routerAdminComments;

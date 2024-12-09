@@ -44,11 +44,15 @@ export const markAsRead = async (req, res) => {
 /**
  * Create notification
  * @function createNotification
- * @param {Object} req - Request object
- * @param {Object} res - Response object
+ * @param {String} refModel - Reference model
+ * @param {Object} user - User object
+ * @param {Object} otherUser - Other user object
+ * @param {Object} publication - Publication object
+ * @param {Object} otherPublication - Other publication object
+ * @param {Object} comment - Comment object
+ * @param {Object} reaction - Reaction object
+ * @param {Object} message - Message object
  * @returns {Object} - Notification
- * @method POST
- * @example http://localhost:3001/notifications
  */
 export const createNotification = async (
   refModel,

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { joinRooms, getMessagesByRoom, sendMessage, markAsRead } from "../controllers/messages.controller.js";
+import { getChatsByUser, getMessagesByChat, sendMessage, markAsRead } from "../controllers/messages.controller.js";
 import { authorizeRole } from "../middlewares/authenticate.middleware.js";
 
 /**
@@ -8,27 +8,27 @@ import { authorizeRole } from "../middlewares/authenticate.middleware.js";
 const routerMessages = Router();
 
 /**
- * Join rooms
- * @method POST
+ * Get chats by user
+ * @method GET
  */
-routerMessages.post("/messages", authorizeRole(["user", "userPremium", "admin"]), (req, res) => joinRooms(req, res, io));
+routerMessages.get("/messages/:user", authorizeRole(["user", "userPremium", "admin"]), getChatsByUser);
 
 /**
  * Get messages by room
  * @method GET
  */
-routerMessages.get("/messages/:roomId", authorizeRole(["user", "userPremium", "admin"]), getMessagesByRoom);
+routerMessages.get("/messages/:chat", authorizeRole(["user", "userPremium", "admin"]), getMessagesByChat);
 
 /**
  * Send message
  * @method POST
  */
-routerMessages.post("/messages/:roomId", authorizeRole(["user", "userPremium", "admin"]), sendMessage);
+routerMessages.post("/messages/:chat", authorizeRole(["user", "userPremium", "admin"]), sendMessage);
 
 /**
  * Mark message as read
  * @method PATCH
  */
-routerMessages.patch("messages/:roomId", authorizeRole(["user", "userPremium", "admin"]), markAsRead);
+routerMessages.patch("messages/:chat", authorizeRole(["user", "userPremium", "admin"]), markAsRead);
 
 export default routerMessages;

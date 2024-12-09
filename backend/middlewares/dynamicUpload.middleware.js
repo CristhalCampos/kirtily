@@ -1,6 +1,6 @@
 import { authorizeRole } from "./authenticate.middleware.js";
-import { uploadImage, uploadImagePremium } from "./uploadPictureProfile.middleware";
-import { uploadMedia, uploadMediaPremium } from "../controllers/media.controller.js";
+import { uploadImage, uploadImagePremium } from "./uploadPictureProfile.middleware.js";
+import { uploadMedia, uploadMediaPremium } from "./uploadMedia.middleware.js";
 
 export const dynamicUpload = (req, res, next) => {
   if (authorizeRole(["user"])(req, res, () => {})) {

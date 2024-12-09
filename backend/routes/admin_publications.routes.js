@@ -17,6 +17,6 @@ routerAdminPublications.get("/admin/publications", authorizeRole(["admin"]), get
  * Delete publication
  * @method DELETE
  */
-routerAdminPublications.delete("/admin/publications/:id", authorizeRole(["admin"]), deletePublication);
+routerAdminPublications.delete("/admin/publications", authorizeRole(["admin"]), deletePublication);
 
 export default routerAdminPublications;

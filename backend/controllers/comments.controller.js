@@ -38,8 +38,13 @@ export const comment = async (req, res) => {
     if (!publication) {
       return res.status(404).json({ message: "Publication not found" });
     }
-    const user = await User.findOne({ username: req.user.username }, { _id: 1, username: 1, status: 1, deleted: 1 });
-    const author = await User.findOne({ username: publication.author }, { _id: 1, username: 1, status: 1, deleted: 1, blockOrUnblockUser: 1 });
+    const user = await User.findOne(
+      { username: req.user.username },
+      { _id: 1, username: 1, status: 1, deleted: 1 }
+    );
+    const author = await User.findOne(
+      { username: publication.author },
+      { _id: 1, username: 1, status: 1, deleted: 1, blockOrUnblockUser: 1 });
     if (author.blockOrUnblockUser.includes(user._id)) {
       return res.status(403).json({ message: "User is blocked" });
     }
@@ -66,18 +71,26 @@ export const reportComment = async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.commentId);
     if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
+      return res.status(404).json({ error: "Comment not found" });
     }
     comment.reported = true;
     await comment.save();
     return res.status(200).json("Comment reported");
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    error === "CastError"
+      ? res.status(400).json({ error: error.message })
+      : res.status(500).json({ message: error.message });
   }
 }
 
 /**
  * Delete comment from my publication
+ * @function deleteComment
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @returns {Object} - Message
+ * @method DELETE
+ * @example http://localhost:3001/publications/:id/comments/:commentId
  */
 export const deleteCommentMyPublication = async (req, res) => {
   try {

@@ -21,8 +21,9 @@ export const usersStatistics = async (req, res) => {
     const totalUsers = await User.countDocuments();
     res.json({ activeUsers, blockedUsers, reportedUsers, deletedUsers, totalUsers });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error al obtener el número de usuarios" });
+    error === "ValidationError"
+      ? res.status(400).json({ error: error.message })
+      : res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -43,8 +44,9 @@ export const publicationsStatistics = async (req, res) => {
     const totalPublications = await Publication.countDocuments();
     res.json({ activePublications, reportedPublications, deletedPublications, totalPublications });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error al obtener el número de publicaciones" });
+    error === "ValidationError"
+      ? res.status(400).json({ error: error.message })
+      : res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -65,8 +67,9 @@ export const commentsStatistics = async (req, res) => {
     const totalComments = await Comment.countDocuments();
     res.json({ activeComments, reportedComments, deletedComments, totalComments });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error al obtener el número de comentarios" });
+    error === "ValidationError"
+      ? res.status(400).json({ error: error.message })
+      : res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -87,7 +90,8 @@ export const transactionsStatistics = async (req, res) => {
     const totalTransactions = await Transaction.countDocuments();
     res.json({ pendingTransactions, completedTransactions, failedTransactions, totalTransactions });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error al obtener el número de transacciones" });
+    error === "ValidationError"
+      ? res.status(400).json({ error: error.message })
+      : res.status(500).json({ error: "Internal server error" });
   }
 };

@@ -1,7 +1,7 @@
 import { Publication } from "../models/publications.model.js";
 import { User } from "../models/users.model.js";
 import { createNotification } from "./notifications.controller.js";
-import { validatePublication } from "../validation/publications.validation.js";
+import { validatePublication } from "../middlewares/validations.middleware.js";
 
 /**
  * View my publication

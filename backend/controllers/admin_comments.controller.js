@@ -5,9 +5,11 @@ import { Comment } from "../models/comments.model.js";
  * @function getAllComments
  * @param {Object} req - Request object
  * @param {Object} res - Response object
+ * @query {Number} page - Page number
+ * @query {Number} limit - Limit of comments
  * @returns {Object} - List of comments
  * @method GET
- * @example http://localhost:3001/admin/comments
+ * @example http://localhost:3001/admin/comments?page=1&limit=10
  */
 export const getAllComments = async (req, res) => {
   try {
@@ -15,7 +17,9 @@ export const getAllComments = async (req, res) => {
     const comments = await Comment.paginate({ deleted: false }, { page, limit });
     return res.status(200).json(comments);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    error === "ValidationError"
+    ? res.status(400).json({ error: error.message} )
+    : res.status(500).json({ error: "Internal server error"});
   }
 };
 
@@ -24,17 +28,20 @@ export const getAllComments = async (req, res) => {
  * @function deleteComment
  * @param {Object} req - Request object
  * @param {Object} res - Response object
+ * @param {String} req.body.id - Id of the comment
  * @returns {Object} - Message
  * @method DELETE
- * @example http://localhost:3001/admin/comments/:id
+ * @example http://localhost:3001/admin/comments
  */
 export const deleteComment = async (req, res) => {
   try {
-    const comment = await Comment.findById(req.params.id);
+    const comment = await Comment.findById(req.body.id);
     if (!comment) return res.status(404).json({ error: "Comment not found" });
-    await Comment.findOneAndUpdate({ _id: req.params.id }, { $set: { deleted: true } });
+    await Comment.findByIdAndUpdate( comment._id, { deleted: true } );
     return res.status(200).json("Comment deleted");
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    error === "CastError"
+    ? res.status(400).json({ error: error.message} )
+    : res.status(500).json({ error: "Internal server error"});
   }
 };

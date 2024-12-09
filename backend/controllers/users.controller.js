@@ -21,9 +21,13 @@ import { validateProfile } from "../middlewares/validations.middleware.js";
  */
 export const registerUser = async (req, res) => {
   try {
-    const userExists = await User.findOne({ email: req.body.email }, { email: 1, username: 1 });
-    if (userExists) {
-      return res.status(400).json({ error: "User already exists" });
+    const emailExists = await User.findOne({ email: req.body.email }, { email: 1 });
+    if (emailExists) {
+      return res.status(400).json({ error: "There is a registered user with this email" });
+    }
+    const usernameExists = await User.findOne({ username: req.body.username }, { username: 1 });
+    if (usernameExists) {
+      return res.status(400).json({ error: "Username already exists" });
     }
     if (req.body.password) {
       req.body.password = await bcrypt.hash(req.body.password, parseInt(process.env.SALT_ROUNDS));
@@ -246,9 +250,13 @@ export const viewMyProfile = async (req, res) => {
 export const editProfile = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username }, { _id: 1, status: 1, deleted: 1 });
-    if (!user) return res.status(404).json({ error: "User not found" });
-    if (user.status === "blocked" || user.deleted) return res.status(403).json({ error: "User is blocked or has been deleted" });
-    const { error } = validateEditProfile(req.body);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    if (user.status === "blocked" || user.deleted) {
+      return res.status(403).json({ error: "User is blocked or has been deleted" });
+    }
+    const { error } = validateProfile(req.body);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
