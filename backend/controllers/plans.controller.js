@@ -17,8 +17,6 @@ export const createPlans = async (req, res) => {
         },
       }
     );
-    const product_id = "PROD-XXXXXX";
-    const currency = "USD";
     const createdPlans = [];
     for (const plan of plans) {
       const response = await axios.post(
@@ -32,6 +30,7 @@ export const createPlans = async (req, res) => {
       );
       createdPlans.push(response.data);
     }
+
     res.status(201).json({ message: "Plans created successfully", plans: createdPlans });
   } catch (error) {
     console.error(error.response?.data || error.message);

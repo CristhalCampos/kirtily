@@ -1,3 +1,5 @@
+const product_id = "PROD-XXXXXX";
+const currency = "USD";
 const plans = [
   {
     name: "Premium Monthly Plan",

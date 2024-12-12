@@ -8,15 +8,20 @@ import { searchUser, searchPublication } from "../controllers/search.controller.
 const routerSearch = Router();
 
 /**
- * Search user by full name, username, bio or any of interests
+ * Search user by full name, username, bio or any of interests, and publication by author, hashtags, content or media
  * @method GET
  */
-routerSearch.get("/search", authorizeRole(["user", "userPremium", "admin"]), searchUser);
-
-/**
- * Search publication by author, hashtags, content or media
- * @method GET
- */
-routerSearch.get("/search", authorizeRole(["user", "userPremium", "admin"]), searchPublication);
+routerSearch.get("/search", authorizeRole(["user", "userPremium", "admin"]), async (req, res) => {
+  try {
+    const searchUser = await searchUser(req, res);
+    const searchPublication = await searchPublication(req, res);
+    res.status(200).json({
+      searchUser: searchUser.data,
+      searchPublication: searchPublication.data,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 export default routerSearch;

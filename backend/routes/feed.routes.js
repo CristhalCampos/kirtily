@@ -1,22 +1,21 @@
 import Router from "express";
-import { getFeedPosts, getUserSuggestions, getHighlightedPublications } from "../controllers/feedController.js";
+import { getFeedPublications, getUserSuggestions, getHighlightedPublications } from "../controllers/feed.controller.js";
 import { authorizeRole } from "../middlewares/authenticate.middleware.js";
 
 /**
  * Feed routes
  */
-const router = Router();
+const routerFeed = Router();
 
 /**
  * Get feed publications, user suggestions and highlighted publications
  * @method GET
  */
-router.get("/", authorizeRole(["user", "userPremium", "admin"]), async (req, res) => {
+routerFeed.get("/feed", authorizeRole(["user", "userPremium", "admin"]), async (req, res) => {
   try {
-    const feedPublications = await getFeedPosts(req, res);
+    const feedPublications = await getFeedPublications(req, res);
     const userSuggestions = await getUserSuggestions(req, res);
     const highlightedPublications = await getHighlightedPublications(req, res);
-
     res.status(200).json({
       feedPublications: feedPublications.data,
       userSuggestions: userSuggestions.data,
@@ -27,4 +26,4 @@ router.get("/", authorizeRole(["user", "userPremium", "admin"]), async (req, res
   }
 });
 
-export default router;
+export default routerFeed;

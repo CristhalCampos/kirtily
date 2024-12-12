@@ -1,5 +1,5 @@
-import { User } from "../models/users.model";
-import { Publication, Publication } from "../models/publications.model";
+import { User } from "../models/users.model.js";
+import { Publication } from "../models/publications.model.js";
 
 /**
  * Get feed publications
