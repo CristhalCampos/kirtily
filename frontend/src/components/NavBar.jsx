@@ -1,71 +1,61 @@
 import { useTheme } from "../contexts/useTheme";
-import { useLocation } from "react-router-dom";
+import { useLanguage } from '../contexts/useLanguage';
+import { translations } from '../translations/translations';
+import logoDark from '../resources/img/logoDark.png';
+import logoLight from '../resources/img/logoLight.png';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse, faMagnifyingGlass, faSun, faMoon, faUser, faBell, faMessage, faPlus } from "@fortawesome/free-solid-svg-icons";
 
-const NavBar = () => {
+export const NavBar = () => {
   const { theme, toggleTheme } = useTheme();
-  const location = useLocation();
-
-  const authRoutes = ['/', '/register', '/forgot-password', '/reset-password'];
-  const isAdminRoute = location.pathname.startsWith('/admin');
-  const isAuthRoute = authRoutes.includes(location.pathname);
+  const { language } = useLanguage();
+  const t = translations[language];
 
   return (
-    <nav className={`bg-${theme === 'dark' ? 'bg-dark' : 'bg-light'}`}>
+    <nav className={`${theme === 'dark' ? 'bg-[#1E1E1E] text-white' : 'bg-[#F0F0F0] text-black'}`}>
       <div className="flex justify-between items-center">
         {/* Logo */}
         <div className="">
-          <img src={`${theme === 'dark' ? '../resources/img/logo_dark' : '../resources/img/logo_light'}`} alt="Logo" className="h-8" />
+          <img src={`${theme === 'dark' ? logoDark : logoLight}`} alt="Logo" className="h-8" />
         </div>
         <div className="flex items-center">
-          {!isAuthRoute && (
-            <button className="">
-              <img src={`${theme === 'dark' ? '../resources/icons/search_dark' : '../resources/icons/search_light'}`} alt="Search" />
-            </button>
-          )}
-            {/* Dark mode toggle */}
-            <button onClick={toggleTheme}>
-              <img src={`${theme === 'dark' ? '../resources/icons/mode_dark' : '../resources/icons/mode_light'}`} alt="Toggle Dark Mode" className="h-6" />
-            </button>
+          <button>
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="h-6" />
+          </button>
+          {/* Dark mode toggle */}
+          <button onClick={toggleTheme}>
+            {theme === 'dark' ? (
+              <FontAwesomeIcon icon={faSun} className="h-6" />
+            ) : (
+              <FontAwesomeIcon icon={faMoon} className="h-6" />
+            )}
+          </button>
         </div>
       </div>
 
       {/* Only for protected routes */}
-      {!isAuthRoute && (
-        <div className="flex justify-around items-center">
-          <a href="/feed">
-            <button className="">
-              <img src={`${theme === 'dark' ? '../resources/icons/feed_dark' : '../resources/icons/feed_light'}`} alt="Feed" className="h-6" />
-            </button>
-          </a>
-          <a href="/notifications">
-            <button className="">
-              <img src={`${theme === 'dark' ? '../resources/icons/notifications_dark' : '../resources/icons/notifications_light'}`} alt="Notifications" className="h-6" />
-            </button>
-          </a>
-          <a href="/create-publication">
-            <button className="">
-              <img src={`${theme === 'dark' ? '../resources/icons/create_dark' : '../resources/icons/create_light'}`} alt="Create publication" className="h-6" />
-            </button>
-          </a>
-          <a href="/messages">
-            <button className="">
-            <img src={`${theme === 'dark' ? '../resources/icons/messages_dark' : '../resources/icons/messages_light'}`} alt="Messages" className="h-6" />
-            </button>
-          </a>
-          {isAdminRoute && (
-            <a href="/admin">
-              <button className="">
-                <img src={`${theme === 'dark' ? '../resources/icons/admin_dark' : '../resources/icons/admin_light'}`} alt="Admin" className="h-6" />
-              </button>
-            </a>
-          )}
-          <a href="/my-profile">
-            <button className="">
-              <img src={`${theme === 'dark' ? '../resources/icons/profile_dark' : '../resources/icons/profile_light'}`} alt="My profile" className="h-6" />
-            </button>
-          </a>
-        </div>
-      )}
+      <div className="flex justify-around items-center">
+        <button className="">
+          <FontAwesomeIcon icon={faHouse} className="h-6" />
+          <span className="text-sm">{t.feed}</span>
+        </button>
+        <button className="">
+          <FontAwesomeIcon icon={faBell} className="h-6" />
+          <span className="text-sm">{t.notifications}</span>
+        </button>
+        <button className="">
+          <FontAwesomeIcon icon={faPlus} className="h-6" />
+          <span className="text-sm">{t.create}</span>
+        </button>
+        <button className="">
+          <FontAwesomeIcon icon={faMessage} className="h-6" />
+          <span className="text-sm">{t.messages}</span>
+        </button>
+        <button className="">
+          <FontAwesomeIcon icon={faUser} className="h-6" />
+          <span className="text-sm">{t.profile}</span>
+        </button>
+      </div>
     </nav>
   );
 };

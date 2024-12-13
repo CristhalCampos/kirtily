@@ -40,5 +40,3 @@ export const LanguageContextProvider = ({ children }) => {
 LanguageContextProvider.propTypes = {
   children: propTypes.node.isRequired,
 };
-
-export default LanguageContextProvider;

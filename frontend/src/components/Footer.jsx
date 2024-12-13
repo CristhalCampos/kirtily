@@ -2,12 +2,12 @@ import { useLanguage } from '../contexts/useLanguage';
 import { translations } from '../translations/translations';
 import { useTheme } from '../contexts/useTheme';
 
-const Footer = () => {
+export const Footer = () => {
   const { theme } = useTheme();
   const { language, changeLanguage } = useLanguage();
   const t = translations[language];
   return (
-    <footer className={`bg-${theme === 'dark' ? 'bg-dark' : 'bg-light'} text-${theme === 'dark' ? 'text-dark' : 'text-light'}`}>
+    <footer className={`${theme === 'dark' ? 'bg-[#1E1E1E] text-white' : 'bg-[#F0F0F0] text-black'}`}>
       <div className="flex justify-center items-center">
         <select
           value={language}

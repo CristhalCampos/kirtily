@@ -12,6 +12,11 @@ export const translations = {
     email: 'Email',
     password: 'Password',
     confirmPassword: 'Confirm password',
+    feed: 'Feed',
+    notifications: 'Notifications',
+    messages: 'Messages',
+    create: 'Create publication',
+    profile: 'Profile',
   },
   es: {
     login: 'Iniciar sesión',
@@ -26,5 +31,10 @@ export const translations = {
     email: 'Correo electrónico',
     password: 'Contraseña',
     confirmPassword: 'Confirmar contraseña',
+    feed: 'Feed',
+    notifications: 'Notificaciones',
+    messages: 'Mensajes',
+    create: 'Crear publicación',
+    profile: 'Perfil',
   },
 };
