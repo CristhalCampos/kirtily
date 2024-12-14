@@ -7,12 +7,12 @@ export const Footer = () => {
   const { language, changeLanguage } = useLanguage();
   const t = translations[language];
   return (
-    <footer className={`${theme === 'dark' ? 'bg-[#1E1E1E] text-white' : 'bg-[#F0F0F0] text-black'}`}>
+    <footer className={`${theme === 'dark' ? 'bg-[#1E1E1E] text-white' : 'bg-[#F0F0F0] text-black'} fixed bottom-0 w-full`}>
       <div className="flex justify-center items-center">
         <select
           value={language}
           onChange={(e) => changeLanguage(e.target.value)}
-          className="p-2 border rounded"
+          className={`border ${theme === 'dark' ? 'bg-[#1E1E1E] text-white border-white' : 'bg-[#F0F0F0] text-black border-black'} rounded-md py-1 px-4 m-2 appearance-none outline-none`}
         >
           <option value="es">Español</option>
           <option value="en">English</option>

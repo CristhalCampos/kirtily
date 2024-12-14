@@ -15,8 +15,10 @@ export const translations = {
     feed: 'Feed',
     notifications: 'Notifications',
     messages: 'Messages',
-    create: 'Create publication',
+    create: 'Create',
     profile: 'Profile',
+    admin: 'Admin',
+    search: 'Search',
   },
   es: {
     login: 'Iniciar sesión',
@@ -34,7 +36,8 @@ export const translations = {
     feed: 'Feed',
     notifications: 'Notificaciones',
     messages: 'Mensajes',
-    create: 'Crear publicación',
+    create: 'Crear',
     profile: 'Perfil',
+    admin: 'Administrador',
   },
 };

@@ -233,7 +233,7 @@ export const viewMyProfile = async (req, res) => {
 }
 
 /**
- * Edit my profile
+ * @description Edit my profile
  * @function editProfile
  * @param {Object} req - Request object
  * @param {Object} res - Response object
