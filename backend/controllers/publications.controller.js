@@ -4,7 +4,7 @@ import { createNotification } from "./notifications.controller.js";
 import { validatePublication } from "../middlewares/validations.middleware.js";
 
 /**
- * View my publication
+ * @description View my publication
  * @function viewPublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -28,7 +28,7 @@ export const viewMyPublication = async (req, res) => {
 };
 
 /**
- * Create a new publication
+ * @description Create a new publication
  * @function createPublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -60,7 +60,7 @@ export const createPublication = async (req, res) => {
 };
 
 /**
- * Edit a publication
+ * @description Edit a publication
  * @function editPublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -89,7 +89,7 @@ export const editPublication = async (req, res) => {
 };
 
 /**
- * Create a highlight publication
+ * @description Create a highlight publication
  * @function createFeaturedPublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -118,7 +118,7 @@ export const createHighlightPublication = async (req, res) => {
 };
 
 /**
- * Get publications by user, first the highlights and then the non-highlights
+ * @description Get publications by user, first the highlights and then the non-highlights
  * @function getPublicationsByUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -147,7 +147,7 @@ export const getPublicationsByUser = async (req, res) => {
 };
 
 /**
- * Delete a publication
+ * @description Delete a publication
  * @function deletePublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object

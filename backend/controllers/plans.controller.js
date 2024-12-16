@@ -3,6 +3,17 @@ import { config } from "dotenv";
 config({ path: "./config/.env" });
 import { plans } from "../conts/paypal.conts.js";
 
+/**
+ * @description Create plans in PayPal
+ * @route POST /api/v1/plans
+ * @access Public
+ * @function createPlans
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @returns {Object} - Created plans
+ * @method POST
+ * @example http://localhost:3001/api/v1/plans
+ */
 export const createPlans = async (req, res) => {
   try {
     const params = new URLSearchParams();

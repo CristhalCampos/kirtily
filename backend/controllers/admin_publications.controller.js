@@ -1,7 +1,7 @@
 import { Publication } from "../models/publications.model.js";
 
 /**
- * Get all publications
+ * @description Get all publications
  * @function getAllPublications
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -24,7 +24,7 @@ export const getAllPublications = async (req, res) => {
 };
 
 /**
- * Delete publication
+ * @description Delete publication
  * @function deletePublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object

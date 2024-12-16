@@ -2,7 +2,7 @@ import { User } from "../models/users.model.js";
 import { Publication } from "../models/publications.model.js";
 
 /**
- * Search user by full name, username, bio or any of interests
+ * @description Search user by full name, username, bio or any of interests
  * @function searchUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -39,7 +39,7 @@ export const searchUser = async (req, res) => {
 }
 
 /**
- * Search publication by author, hashtags, content or media
+ * @description Search publication by author, hashtags, content or media
  * @function searchPublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object

@@ -1,7 +1,7 @@
 import { Comment } from "../models/comments.model.js";
 
 /**
- * Get all comments
+ * @description Get all comments
  * @function getAllComments
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -24,7 +24,7 @@ export const getAllComments = async (req, res) => {
 };
 
 /**
- * Delete comment
+ * @description Delete comment
  * @function deleteComment
  * @param {Object} req - Request object
  * @param {Object} res - Response object

@@ -2,6 +2,15 @@ import axios from "axios";
 import { config } from "dotenv";
 config({ path: "./config/.env" });
 
+/**
+ * @description Create a product in PayPal
+ * @route POST /api/v1/products
+ * @access Public
+ * @function createProduct
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @returns {Object} - Created product
+ */
 export const createProduct = async (req, res) => {
   const params = new URLSearchParams();
   params.append("grant_type", "client_credentials");

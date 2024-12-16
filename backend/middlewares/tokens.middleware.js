@@ -3,7 +3,7 @@ import { config } from "dotenv";
 config({ path: "./config/.env" });
 
 /**
- * Generate and set access and refresh tokens in cookies
+ * @description Generate and set access and refresh tokens in cookies
  * @param {Object} user - User object containing user details
  * @param {Object} res - Response object
  */
@@ -39,7 +39,7 @@ export const generateTokens = (user, res) => {
 };
 
 /**
- * Generate a reset password token
+ * @description Generate a reset password token
  * @param {Object} user - User object containing user details
  * @returns {String} - Reset password token
  */

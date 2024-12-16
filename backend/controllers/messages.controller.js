@@ -3,7 +3,7 @@ import { Chat } from "../models/chats.model.js";
 import { createNotification } from "./notifications.controller.js";
 
 /**
- * Get chats by user
+ * @description Get chats by user
  * @function getChatsByUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -36,7 +36,7 @@ export const getChatsByUser = async (req, res) => {
 }
 
 /**
- * Get messages by chat
+ * @description Get messages by chat
  * @function getMessagesByChat
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -61,7 +61,7 @@ export const getMessagesByChat = async (req, res) => {
 }
 
 /**
- * Send a message
+ * @description Send a message
  * @function sendMessage
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -96,7 +96,7 @@ export const sendMessage = async (req, res) => {
 }
 
 /**
- * Mark as read
+ * @description Mark as read
  * @function markAsRead
  * @param {Object} req - Request object
  * @param {Object} res - Response object

@@ -2,7 +2,7 @@ import e from "express";
 import { Transaction } from "../models/transactions.model.js";
 
 /**
- * Get all transactions
+ * @description Get all transactions
  * @function getAllTransactions
  * @param {Object} req - Request object
  * @param {Object} res - Response object

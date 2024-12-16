@@ -3,7 +3,7 @@ import { User } from "../models/users.model.js";
 import { createNotification } from "./notifications.controller.js";
 
 /**
- * View a publication
+ * @description View a publication
  * @function viewPublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -25,7 +25,7 @@ export const viewPublication = async (req, res) => {
 };
 
 /**
- * inspires me” reaction to a publication
+ * @description Inspires me” reaction to a publication
  * @function inspiresMe
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -56,7 +56,7 @@ export const inspiresMe = async (req, res) => {
 };
 
 /**
- * I recommend it” reaction to a publication
+ * @description I recommend it” reaction to a publication
  * @function recommendIt
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -84,7 +84,7 @@ export const recommendIt = async (req, res) => {
 };
 
 /**
- * I want to contribute” reaction to a publication
+ * @description I want to contribute” reaction to a publication
  * @function wantToContribute
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -112,7 +112,7 @@ export const wantToContribute = async (req, res) => {
 };
 
 /**
- * Share a publication
+ * @description Share a publication
  * @function sharePublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -136,7 +136,7 @@ export const sharePublication = async (req, res) => {
 };
 
 /**
- * Report a publication
+ * @description Report a publication
  * @function reportPublication
  * @param {Object} req - Request object
  * @param {Object} res - Response object

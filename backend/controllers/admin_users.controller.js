@@ -4,7 +4,7 @@ import { config } from "dotenv";
 config({ path: "./config/.env" });
 
 /**
- * Get all users
+ * @description Get all users
  * @function getAllUsers
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -31,7 +31,7 @@ export const getAllUsers = async (req, res) => {
 }
 
 /**
- * Create user
+ * @description Create user
  * @function createUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -70,7 +70,7 @@ export const createUser = async (req, res) => {
 }
 
 /**
- * Edit user
+ * @description Edit user
  * @function editUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -101,7 +101,7 @@ export const editUser = async (req, res) => {
 }
 
 /**
- * Block or unblock user
+ * @description Block or unblock user
  * @function blockUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -134,7 +134,7 @@ export const blockOrUnblockUser = async (req, res) => {
 }
 
 /**
- * Delete user
+ * @description Delete user
  * @function deleteUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object

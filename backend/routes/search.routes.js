@@ -8,7 +8,7 @@ import { searchUser, searchPublication } from "../controllers/search.controller.
 const routerSearch = Router();
 
 /**
- * Search user by full name, username, bio or any of interests, and publication by author, hashtags, content or media
+ * Search user and publication
  * @method GET
  */
 routerSearch.get("/search", authorizeRole(["user", "userPremium", "admin"]), async (req, res) => {

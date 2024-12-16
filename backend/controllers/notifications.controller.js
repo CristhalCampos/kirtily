@@ -1,7 +1,7 @@
 import { Notification } from "../models/notifications.model.js";
 
 /**
- * Get notifications
+ * @description Get notifications
  * @function getAllNotifications
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -22,7 +22,7 @@ export const getNotifications = async (req, res) => {
 }
 
 /**
- * Mark notification as read
+ * @description Mark notification as read
  * @function markAsRead
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -42,7 +42,7 @@ export const markAsRead = async (req, res) => {
 }
 
 /**
- * Create notification
+ * @description Create notification
  * @function createNotification
  * @param {String} refModel - Reference model
  * @param {Object} user - User object

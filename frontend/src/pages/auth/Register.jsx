@@ -1,6 +1,7 @@
 import { useTheme } from "../../contexts/useTheme";
 import { useLanguage } from "../../contexts/useLanguage";
 import { translations } from "../../translations/translations";
+import { Link } from "react-router-dom";
 import animationDark from "../../resources/files/animationDark.mp4";
 import animationLight from "../../resources/files/animationLight.mp4";
 
@@ -25,7 +26,7 @@ export const Register = () => {
             <input type="password" placeholder={t.confirmPassword} className={`${theme === 'dark' ? 'bg-[#2C2C2C] text-white' : 'bg-gray-300 text-black'} w-full py-2 px-4 mb-2 rounded outline-none`} />
             <button type="submit" className={`${theme === 'dark' ? 'bg-[#3B8AD9]' : 'bg-[#FF9E4D]'} font-poppins w-full rounded-2xl py-2 px-4 mt-2 shadow`}>{t.btnRegister}</button>
           </form>
-          <p className="text-xs md:text-base mt-4 text-center">{t.haveAccount} <a href="/login" className={`${theme === 'dark' ? 'text-[#FFD27F]' : 'text-[#3B8AD9]'}`}>{t.toLogin}</a></p>
+          <p className="text-xs md:text-base mt-4 text-center">{t.haveAccount} <Link to="/login" className={`${theme === 'dark' ? 'text-[#FFD27F]' : 'text-[#3B8AD9]'}`}>{t.login}</Link></p>
         </div>
       </div>
     </div>

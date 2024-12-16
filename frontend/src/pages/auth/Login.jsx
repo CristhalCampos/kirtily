@@ -1,6 +1,10 @@
 import { useTheme } from "../../contexts/useTheme";
 import { useLanguage } from "../../contexts/useLanguage";
 import { translations } from "../../translations/translations";
+import { useState } from "react";
+import Form from "../../components/Form";
+import { login } from "../../services/authService";
+import { Link } from "react-router-dom";
 import animationDark from "../../resources/files/animationDark.mp4";
 import animationLight from "../../resources/files/animationLight.mp4";
 
@@ -8,6 +12,26 @@ export const Login = () => {
   const { theme } = useTheme();
   const { language } = useLanguage();
   const t = translations[language];
+
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = async (formValues) => {
+    try {
+      setLoading(true);
+      setErrorMessage(null);
+
+      const response = await login(formValues);
+      console.log(response);
+
+      // Redirect to feed page
+      window.location.href = "/feed";
+
+    } catch (error) {
+      setErrorMessage(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className={`bg-gradient-to-b ${theme === 'dark' ? 'from-[#5FA8F5] via-[#3B8AD9] to-[#2C6EA3]' : 'from-[#FFD27F] via-[#FF9E4D] to-[#F5765F]'} flex justify-center items-center w-screen h-screen`}>
       <div className={`rounded-xl ${theme === 'dark' ? "bg-dark text-white" : "bg-light text-black"} font-opensans text-sm md:text-lg w-[95%] h-[80%] md:h-[75%] p-8 flex flex-col md:flex-row justify-center items-center shadow`}>
@@ -17,13 +41,22 @@ export const Login = () => {
         </div>
         <div className="w-full md:w-1/2 flex flex-col justify-center items-center mt-3">
           <h1 className={`${theme === 'dark' ? 'text-[#FFD27F]' : 'text-[#3B8AD9]'} text-lg md:text-2xl text-center font-bold font-poppins mb-4`}>{t.login}</h1>
-          <form method="post" action="">
-            <input type="email" placeholder={t.email} className={`${theme === 'dark' ? 'bg-[#2C2C2C] text-white' : 'bg-gray-300 text-black'} w-full py-2 px-4 mb-2 rounded outline-none`} />
-            <input type="password" placeholder={t.password} className={`${theme === 'dark' ? 'bg-[#2C2C2C] text-white' : 'bg-gray-300 text-black'} w-full py-2 px-4 mb-2 rounded outline-none`} />
-            <button type="submit" className={`${theme === 'dark' ? 'bg-[#3B8AD9]' : 'bg-[#FF9E4D]'} font-poppins w-full rounded-2xl py-2 px-4 mt-2 shadow`}>{t.btnLogin}</button>
-          </form>
-          <p className="text-xs md:text-base mt-4 text-center">{t.forgotPassword} <a href="/login" className={`${theme === 'dark' ? 'text-[#FFD27F]' : 'text-[#3B8AD9]'}`}>{t.toForgot}</a></p>
-          <p className="text-xs md:text-base mt-4 text-center">{t.notHaveAccount} <a href="/login" className={`${theme === 'dark' ? 'text-[#FFD27F]' : 'text-[#3B8AD9]'}`}>{t.toRegister}</a></p>
+          {/* Loading spinner */}
+          {loading && (
+            <p className="text-center text-sm md:text-base text-gray-500">
+              {t.loading}...
+            </p>
+          )}
+
+          {/* Error message */}
+          {errorMessage && (
+            <p className="text-center text-sm md:text-base text-red-500">
+              {errorMessage}
+            </p>
+          )}
+          <Form formType="login" onSubmit={handleSubmit} />
+          <p className="text-xs md:text-base mt-4 text-center">{t.forgotPassword} <Link to="/forgot-password" className={`${theme === 'dark' ? 'text-[#FFD27F]' : 'text-[#3B8AD9]'}`}>{t.toForgot}</Link></p>
+          <p className="text-xs md:text-base mt-4 text-center">{t.notHaveAccount} <Link to="/register" className={`${theme === 'dark' ? 'text-[#FFD27F]' : 'text-[#3B8AD9]'}`}>{t.toRegister}</Link></p>
         </div>
       </div>
     </div>

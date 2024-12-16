@@ -4,11 +4,21 @@ import axios from "axios";
 import { config } from "dotenv";
 config({ path: "./config/.env" });
 
+/**
+ * @description Create a new subscription
+ * @route POST /api/v1/subscriptions
+ * @access Public
+ * @function createSubscription
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @returns {Object} - Subscription
+ * @method POST
+ * @example http://localhost:3001/api/v1/subscriptions
+ */
 export const createSubscription = async (req, res) => {
   try {
     const { userId, planId } = req.body;
 
-    // Obtén el token de acceso de PayPal
     const params = new URLSearchParams();
     params.append("grant_type", "client_credentials");
 
@@ -23,7 +33,6 @@ export const createSubscription = async (req, res) => {
       }
     );
 
-    // Obtén detalles del plan para verificar el precio y duración
     const { data: planDetails } = await axios.get(
       `${process.env.PAYPAL_API}/v1/billing/plans/${planId}`,
       {
@@ -37,7 +46,6 @@ export const createSubscription = async (req, res) => {
     const regularCycle = billing_cycles.find(cycle => cycle.tenure_type === "REGULAR");
     const trialCycle = billing_cycles.find(cycle => cycle.tenure_type === "TRIAL");
 
-    // Fechas de inicio y finalización
     const startDate = new Date();
     const endDate = new Date(startDate);
     if (regularCycle.frequency.interval_unit === "MONTH") {
@@ -46,7 +54,6 @@ export const createSubscription = async (req, res) => {
       endDate.setFullYear(endDate.getFullYear() + regularCycle.frequency.interval_count);
     }
 
-    // Crear suscripción en la base de datos
     const subscription = new Subscription({
       user: userId,
       plan: name.includes("Monthly") ? "monthly" : "yearly",
@@ -65,18 +72,26 @@ export const createSubscription = async (req, res) => {
   }
 };
 
-// Renovar suscripción
+/**
+ * @description Renew a subscription
+ * @route POST /api/v1/subscriptions/renew
+ * @access Public
+ * @function renewSubscription
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @returns {Object} - Subscription
+ * @method POST
+ * @example http://localhost:3001/api/v1/subscriptions/renew
+ */
 export const renewSubscription = async (req, res) => {
   try {
     const { subscriptionId } = req.body;
 
-    // Obtener la suscripción de la base de datos
     const subscription = await Subscription.findById(subscriptionId).populate("user");
     if (!subscription || !subscription.isActive) {
       return res.status(400).json({ error: "Invalid or inactive subscription" });
     }
 
-    // Calcular nueva fecha de finalización
     const newEndDate = new Date(subscription.endDate);
     if (subscription.plan === "monthly") {
       newEndDate.setMonth(newEndDate.getMonth() + 1);
@@ -84,7 +99,6 @@ export const renewSubscription = async (req, res) => {
       newEndDate.setFullYear(newEndDate.getFullYear() + 1);
     }
 
-    // Cobrar al usuario a través de PayPal
     const paymentData = {
       intent: "CAPTURE",
       purchase_units: [
@@ -122,11 +136,9 @@ export const renewSubscription = async (req, res) => {
     );
 
     if (paymentResponse.status === "COMPLETED") {
-      // Actualizar suscripción en la base de datos
       subscription.endDate = newEndDate;
       await subscription.save();
 
-      // Guardar la transacción
       const transaction = new Transaction({
         user: subscription.user._id,
         amount: subscription.price,
@@ -146,7 +158,15 @@ export const renewSubscription = async (req, res) => {
   }
 };
 
-// Cancelar suscripción
+/**
+ * @description Cancel a subscription
+ * @function cancelSubscription
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @returns {Object} - Subscription
+ * @method POST
+ * @example http://localhost:3001/api/v1/subscriptions/cancel
+ */
 export const cancelSubscription = async (req, res) => {
   try {
     const { userId } = req.body;
@@ -168,7 +188,15 @@ export const cancelSubscription = async (req, res) => {
   }
 };
 
-// Ver estado de la suscripción
+/**
+ * @description Get subscription status
+ * @function getSubscriptionStatus
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @returns {Object} - Subscription status
+ * @method GET
+ * @example http://localhost:3001/api/v1/subscriptions/:userId
+ */
 export const getSubscriptionStatus = async (req, res) => {
   try {
     const { userId } = req.params;

@@ -1,7 +1,7 @@
 import { useTheme } from "../../contexts/useTheme";
 import { useLanguage } from "../../contexts/useLanguage";
 import { translations } from "../../translations/translations";
-import animationDark from "../../resource/files/animationDark.mp4";
+import animationDark from "../../resources/files/animationDark.mp4";
 import animationLight from "../../resources/files/animationLight.mp4";
 
 export const ResetPassword = () => {

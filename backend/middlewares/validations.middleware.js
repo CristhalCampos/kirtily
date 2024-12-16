@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 /**
- * Validate user registration
+ * @description Validate user registration
  * @function registerValidation
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -24,7 +24,7 @@ export const registerValidation = (req, res, next) => {
 };
 
 /**
- * Validate user creation
+ * @description Validate user creation
  * @function createUserValidation
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -48,7 +48,7 @@ export const createUserValidation = (req, res, next) => {
 };
 
 /**
- * Validate user edit
+ * @description Validate user edit
  * @function editUserValidation
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -68,7 +68,7 @@ export const editUserValidation = (req, res, next) => {
 };
 
 /**
- * Validate user login
+ * @description Validate user login
  * @function loginValidation
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -86,7 +86,7 @@ export const loginValidation = (req, res, next) => {
 };
 
 /**
- * Validate user forgot password
+ * @description Validate user forgot password
  * @function forgotValidation
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -103,7 +103,7 @@ export const forgotValidation = (req, res, next) => {
 };
 
 /**
- * Validate user reset password
+ * @description Validate user reset password
  * @function resetValidation
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -123,7 +123,7 @@ export const resetValidation = (req, res, next) => {
 };
 
 /**
- * Validate user edit password
+ * @description Validate user edit password
  * @function editValidation
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -144,7 +144,7 @@ export const editValidation = (req, res, next) => {
 };
 
 /**
- * Validate user profile
+ * @description Validate user profile
  * @function validateProfile
  * @param {Object} data - Request object
  * @returns {Function} - Next middleware function
@@ -160,7 +160,7 @@ export const validateProfile = (data) => {
 };
 
 /**
- * Validate publication
+ * @description Validate publication
  * @function validatePublication
  * @param {Object} data - Request object
  * @returns {Function} - Next middleware function

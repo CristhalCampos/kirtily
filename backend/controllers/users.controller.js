@@ -7,7 +7,7 @@ import { generateTokens, generateResetToken } from "../middlewares/tokens.middle
 import { validateProfile } from "../middlewares/validations.middleware.js";
 
 /**
- * Register user
+ * @description Register user
  * @function registerUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -44,7 +44,7 @@ export const registerUser = async (req, res) => {
 }
 
 /**
- * Login user
+ * @description Login user
  * @function loginUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -77,7 +77,7 @@ export const loginUser = async (req, res) => {
 }
 
 /**
- * Logout user
+ * @description Logout user
  * @function logoutUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -91,7 +91,7 @@ export const logoutUser = async (req, res) => {
 }
 
 /**
- * Forgot password
+ * @description Forgot password
  * @function forgotPassword
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -128,7 +128,7 @@ export const forgotPassword = async (req, res) => {
 }
 
 /**
- * Reset password
+ * @description Reset password
  * @function resetPassword
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -158,7 +158,7 @@ export const resetPassword = async (req, res) => {
 };
 
 /**
- * View my account
+ * @description View my account
  * @function viewAccount
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -184,7 +184,7 @@ export const viewAccount = async (req, res) => {
 }
 
 /**
- * Edit password
+ * @description Edit password
  * @function editPassword
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -209,7 +209,7 @@ export const editPassword = async (req, res) => {
 }
 
 /**
- * View my profile
+ * @description View my profile
  * @function viewProfile
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -273,7 +273,7 @@ export const editProfile = async (req, res) => {
 }
 
 /**
- * Share profile
+ * @description Share profile
  * @function shareProfile
  * @param {Object} req - Request object
  * @param {Object} res - Response object

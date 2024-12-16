@@ -2,12 +2,12 @@ import { User } from "../models/users.model.js";
 import { Publication } from "../models/publications.model.js";
 
 /**
- * Get feed publications
+ * @description Get feed publications
  * @function getFeedPublications
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @query {Number} page - Page number
- * query {Number} limit - Limit of publications
+ * @query {Number} limit - Limit of publications
  * @returns {Object} - List of publications
  * @method GET
  * @example http://localhost:3001/feed?page=1&limit=10
@@ -33,7 +33,7 @@ export const getFeedPublications = async (req, res) => {
 };
 
 /**
- * Get user suggestions
+ * @description Get user suggestions
  * @function getUserSuggestions
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -57,7 +57,7 @@ export const getUserSuggestions = async (req, res) => {
 };
 
 /**
- * Get highlighted publications
+ * @description Get highlighted publications
  * @function getHighlightedPublications
  * @param {Object} req - Request object
  * @param {Object} res - Response object

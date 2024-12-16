@@ -1,6 +1,10 @@
 import multer from "multer";
 import path from "path";
 
+/**
+ * @description Middleware for uploading media
+ * @function uploadMedia
+ */
 export const uploadMedia = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
@@ -34,6 +38,10 @@ export const uploadMedia = multer({
   }
 }).array("media", 5);
 
+/**
+ * @description Middleware for uploading premium media
+ * @function uploadMediaPremium
+ */
 export const uploadMediaPremium = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {

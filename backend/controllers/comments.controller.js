@@ -4,7 +4,7 @@ import { User } from "../models/users.model.js";
 import { createNotification } from "./notifications.controller.js";
 
 /**
- * Get comments of a publication
+ * @description Get comments of a publication
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @returns {Object} - List of comments
@@ -25,7 +25,7 @@ export const getComments = async (req, res) => {
 };
 
 /**
- * Comment on a publication
+ * @description Comment on a publication
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @returns {Object} - Message
@@ -60,7 +60,7 @@ export const comment = async (req, res) => {
 };
 
 /**
- * Report a comment
+ * @description Report a comment
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @returns {Object} - Message
@@ -84,7 +84,7 @@ export const reportComment = async (req, res) => {
 }
 
 /**
- * Delete comment from my publication
+ * @description Delete comment from my publication
  * @function deleteComment
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -113,7 +113,7 @@ export const deleteCommentMyPublication = async (req, res) => {
 }
 
 /**
- * Delete comment from another user's publication
+ * @description Delete comment from another user's publication
  * @function deleteComment
  * @param {Object} req - Request object
  * @param {Object} res - Response object

@@ -4,7 +4,7 @@ import { Comment } from "../models/comments.model.js";
 import { Transaction } from "../models/transactions.model.js";
 
 /**
- * Get the number of users: active, blocked, reported, deleted and total
+ * @description Get the number of users: active, blocked, reported, deleted and total
  * @function usersStatistics
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -28,7 +28,7 @@ export const usersStatistics = async (req, res) => {
 };
 
 /**
- * Get the number of publications: active, reported, deleted and total
+ * @description Get the number of publications: active, reported, deleted and total
  * @function publicationsStatistics
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -51,7 +51,7 @@ export const publicationsStatistics = async (req, res) => {
 };
 
 /**
- * Get the number of comments: active, reported, deleted and total
+ * @description Get the number of comments: active, reported, deleted and total
  * @function commentsStatistics
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -74,7 +74,7 @@ export const commentsStatistics = async (req, res) => {
 };
 
 /**
- * Get the number of transactions: pending, completed, failed and total
+ * @description Get the number of transactions: pending, completed, failed and total
  * @function transactionsStatistics
  * @param {Object} req - Request object
  * @param {Object} res - Response object

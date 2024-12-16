@@ -26,7 +26,7 @@ export const NavBar = () => {
   const linkSearch = { icon: <FontAwesomeIcon icon={faMagnifyingGlass} className="h-5 w-5 md:h-6 md:w-6" />, route: '/search', roles: ['user', 'userpremium', 'admin'] };
 
   return (
-    <nav className={`${theme === 'dark' ? 'bg-dark text-white' : 'bg-light text-black'} font-poppins flex flex-col fixed top-0 left-0 w-full`}>
+    <nav className={`${theme === 'dark' ? 'bg-dark text-white' : 'bg-light text-black'} font-poppins flex flex-col w-full`}>
       {/* First Row */}
       <div className="flex justify-between items-center p-4 h-11 md:h-14">
         <div className="h-10">
@@ -47,7 +47,7 @@ export const NavBar = () => {
             onClick={toggleTheme}
             className={`${theme === 'dark' ? 'text-[#FFD27F] hover:bg-[#2C2C2C]' : 'text-[#3B8AD9] hover:bg-gray-300'} p-2 rounded-md`}
           >
-            {theme === 'dark' ? <FontAwesomeIcon icon={faMoon} className="h-5 w-5 md:h-6 md:w-6" /> : <FontAwesomeIcon icon={faSun} className="h-5 w-5 md:h-6 md:w-6" />}
+            {theme === 'dark' ? <FontAwesomeIcon icon={faSun} className="h-5 w-5 md:h-6 md:w-6" /> : <FontAwesomeIcon icon={faMoon} className="h-5 w-5 md:h-6 md:w-6" />}
           </button>
         </div>
       </div>

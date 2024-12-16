@@ -14,7 +14,7 @@ const verifyUsers = (myUser, otherUser) => {
 }
 
 /**
- * View user profile
+ * @description View user profile
  * @function viewUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -40,7 +40,7 @@ export const viewUser = async (req, res) => {
 }
 
 /**
- * Follow or unfollow user
+ * @description Follow or unfollow user
  * @function followOrUnfollowUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -80,7 +80,7 @@ export const followOrUnfollowUser = async (req, res) => {
 }
 
 /**
- * Block user only for me
+ * @description Block user only for me
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @param {String} req.params.username - Username of my user
@@ -106,7 +106,7 @@ export const blockUser = async (req, res) => {
 }
 
 /**
- * Report user
+ * @description Report user
  * @function reportUser
  * @param {Object} req - Request object
  * @param {Object} res - Response object

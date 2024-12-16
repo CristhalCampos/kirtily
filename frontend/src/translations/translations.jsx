@@ -31,6 +31,7 @@ export const translations = {
     profile: 'Profile',
     admin: 'Admin',
     search: 'Search',
+    loading: 'Loading',
   },
   es: {
     login: 'Inicio de sesión',
@@ -63,5 +64,7 @@ export const translations = {
     create: 'Crear',
     profile: 'Perfil',
     admin: 'Administrador',
+    search: 'Buscar',
+    loading: 'Cargando',
   },
 };

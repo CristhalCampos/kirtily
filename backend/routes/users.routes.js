@@ -14,7 +14,7 @@ const routerUsers = Router();
  * Login user
  * @method POST
  */
-routerUsers.post("/", loginValidation, loginUser);
+routerUsers.post("/login", loginValidation, loginUser);
 
 /**
  * Register user

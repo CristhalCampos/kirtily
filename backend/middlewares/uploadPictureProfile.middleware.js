@@ -16,6 +16,10 @@ const imageFileFilter = (req, file, cb) => {
   else cb(new Error("Only image files are allowed (jpg, jpeg, webp)"), false);
 };
 
+/**
+ * @description Middleware for uploading profile picture
+ * @function uploadImage
+ */
 export const uploadImage = multer({
   storage: imageStorage,
   fileFilter: imageFileFilter,
@@ -31,6 +35,10 @@ const premiumImageStorage = multer.diskStorage({
   },
 });
 
+/**
+ * @description Middleware for uploading premium profile picture
+ * @function uploadImagePremium
+ */
 export const uploadImagePremium = multer({
   storage: premiumImageStorage,
   fileFilter: imageFileFilter,

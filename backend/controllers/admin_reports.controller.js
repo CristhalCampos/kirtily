@@ -4,7 +4,7 @@ import { Message } from "../models/messages.model.js";
 import { Subscription } from "../models/subscriptions.model.js";
 
 /**
- * Get registered users report
+ * @description Get registered users report
  * @function registeredUsersReport
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -64,7 +64,7 @@ export const registeredUsersReport = async (req, res) => {
 };
 
 /**
- * Get highlight publications report
+ * @description Get highlight publications report
  * @function highlightPublicationsReport
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -111,7 +111,7 @@ export const highlightPublicationsReport = async (req, res) => {
 };
 
 /**
- * Get publications with most comments report
+ * @description Get publications with most comments report
  * @function mostCommentsReport
  * @param {Object} req - Request object
  * @param {Object} res - Response object
@@ -156,7 +156,7 @@ export const mostCommentsReport = async (req, res) => {
 };
 
 /**
-* Get top messaging users report
+* @description Get top messaging users report
 * @function messagingUsersReport
 * @param {Object} req - Request object
 * @param {Object} res - Response object
@@ -201,7 +201,7 @@ export const messagingUsersReport = async (req, res) => {
 };
 
 /**
-* Get new premium subscriptions report
+* @description Get new premium subscriptions report
 * @function premiumSubscriptionsReport
 * @param {Object} req - Request object
 * @param {Object} res - Response object
