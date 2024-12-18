@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 config({ path: "./config/.env" });
 import { User } from "../models/users.model.js";
@@ -67,8 +68,14 @@ export const loginUser = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
-    generateTokens(user, res);
-    res.status(200).json("User logged in");
+    const { accessToken, refreshToken } = generateTokens(user);
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    res.cookie("accessToken", accessToken, { httpOnly: true, secure: true });
+    res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true });
+
+    res.status(200).json({ accessToken, message: "User logged in" });
   } catch (error) {
     error.name === "ValidationError"
       ? res.status(400).json({ error: error.message })
@@ -86,7 +93,8 @@ export const loginUser = async (req, res) => {
  * @example http://localhost:3001/:username
  */
 export const logoutUser = async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("accessToken", accessToken, { httpOnly: true, secure: true });
+  res.clearCookie("refreshToken", refreshToken, { httpOnly: true, secure: true });
   res.status(200).json("User logged out");
 }
 
@@ -106,7 +114,7 @@ export const forgotPassword = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     const resetToken = generateResetToken(user);
-    const resetLink = `http://localhost:${process.env.PORT}/reset-password/${resetToken}`;
+    const resetLink = `http://localhost:${process.env.PORT_FRONT}/reset-password/${resetToken}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: user.email,
@@ -139,10 +147,15 @@ export const forgotPassword = async (req, res) => {
  */
 export const resetPassword = async (req, res) => {
   try {
-    const decoded = jwt.verify(req.paramstoken, process.env.JWT_RESET_SECRET);
+    const { resetToken } = req.params;
+    const decoded = jwt.verify(resetToken, process.env.JWT_RESET_SECRET);
     const user = await User.findById(decoded.id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
+    }
+    const { password } = req.body;
+    if (!password) {
+      return res.status(400).json({ error: "Password is required" });
     }
     const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
     user.password = hashedPassword;

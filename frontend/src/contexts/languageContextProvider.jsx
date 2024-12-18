@@ -2,6 +2,11 @@ import { useState, useEffect } from "react";
 import LanguageContext from "./languageContext";
 import propTypes from "prop-types";
 
+/**
+ * @description Language context provider
+ * @param {JSX.Element} children
+ * @returns {JSX.Element}
+ */
 export const LanguageContextProvider = ({ children }) => {
   const [language, setLanguage] = useState('es');
   // Load language saved in localStorage

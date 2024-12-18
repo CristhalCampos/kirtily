@@ -1,3 +1,10 @@
+/**
+ * @description Validations for the forms in the application
+ * @function validations
+ * @param {Object} formValues - Form values
+ * @param {Object} fields - Form fields
+ * @returns {Object} - Errors
+ */
 export const validations = (formValues, fields) => {
   const fullNameRegex = /^[a-zA-Z ]{3,50}$/;
   const usernameRegex = /^[a-zA-Z0-9]{3,30}$/;
@@ -7,19 +14,19 @@ export const validations = (formValues, fields) => {
 
   fields.forEach((field) => {
     if (field.required && !formValues[field.name]) {
-      errors[field.name] = `${field.label} is required`;
+      errors[field.name] = "This field is required";
     }
 
     if (field.name === "fullName" &&
       formValues[field.name] &&
       !fullNameRegex.test(formValues[field.name])) {
-      errors["fullName"] = "Invalid full name format";
+      errors["fullName"] = "The full name must be at least 3 characters, and can only contain letters";
     }
 
     if (field.name === "username" &&
       formValues[field.name] &&
       !usernameRegex.test(formValues[field.name])) {
-      errors["username"] = "Invalid username format";
+      errors["username"] = "The username must be at least 3 characters, and can only contain letters and numbers";
     }
 
     if (
@@ -27,7 +34,7 @@ export const validations = (formValues, fields) => {
       formValues[field.name] &&
       !emailRegex.test(formValues[field.name])
     ) {
-      errors["email"] = "Invalid email format";
+      errors["email"] = "The email format is invalid";
     }
 
     if (
@@ -35,7 +42,7 @@ export const validations = (formValues, fields) => {
       formValues[field.name] &&
       !passwordRegex.test(formValues[field.name])
     ) {
-      errors["password"] = "Invalid password format";
+      errors["password"] = "Password must be at least 8 characters, one uppercase letter, one number, and one special character";
     }
 
     if (

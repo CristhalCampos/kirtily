@@ -2,12 +2,16 @@ import { useLanguage } from '../contexts/useLanguage';
 import { translations } from '../translations/translations';
 import { useTheme } from '../contexts/useTheme';
 
+/**
+ * @description Footer component
+ * @returns {JSX.Element}
+ */
 export const Footer = () => {
   const { theme } = useTheme();
   const { language, changeLanguage } = useLanguage();
   const t = translations[language];
   return (
-    <footer className={`${theme === 'dark' ? 'bg-dark text-white' : 'bg-light text-black'} fixed bottom-0 w-full font-opensans text-xs md:text-base`}>
+    <footer className={`${theme === 'dark' ? 'bg-dark text-white' : 'bg-light text-black'} w-full flex justify-center items-center fixed bottom-0 font-opensans text-xs md:text-base`}>
       <div className="flex justify-center items-center">
         <select
           value={language}

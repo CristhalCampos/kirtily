@@ -2,10 +2,13 @@ import { config } from "dotenv"; // import dotenv
 config({ path: "./config/.env" }); // config dotenv
 import express, { json } from "express"; // import express
 import mongoose from "mongoose"; // import mongoose
-import cookieParser from "cookie-parser";
-import { Server } from "socket.io";
-import { createServer } from "node:http";
+import cookieParser from "cookie-parser"; // Import cookie-parser
+import { Server } from "socket.io"; // Import socket.io
+import { initializeSocket } from "./socket/socket.js"; // Import socket
+import { createServer } from "node:http"; // Import Node.js http server
 import cors from "cors"; // import cors
+
+// Import routes
 import routerUsers from "./routes/users.routes.js";
 import routerPublications from "./routes/publications.routes.js";
 import routerComments from "./routes/comments.routes.js";
@@ -19,29 +22,39 @@ import routerAdminPublications from "./routes/admin_publications.routes.js";
 import routerAdminComments from "./routes/admin_comments.routes.js";
 import routerAdminTransactions from "./routes/admin_transactions.routes.js";
 import routerMessages from "./routes/messages.routes.js";
-import { initializeSocket } from "./socket/socket.js";
-const app = express(); // create the server using express
+
+const app = express(); // create the express app
 const port = process.env.PORT; // create a port
+
 app.use(json()); // middleware to parse json
-app.use(cookieParser());
-app.use(cors({
-  origin: ["http://localhost:3000, http://localhost:5173/"],
-  methods: ["GET", "POST", "PATCH", "DELETE"],
-  credentials: true,
-}));
+app.use(cookieParser()); // middleware to parse cookies
+app.use(
+  cors({
+    origin: [`http://localhost:${process.env.PORT_FRONT}`],
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    credentials: true,
+  })
+); // middleware to enable CORS
+
+// Create HTTP and Socket.io servers
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000, http://localhost:5173/"],
+    origin: [`http://localhost:${process.env.PORT_FRONT}`],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   },
 });
 
-// use mongoose to connect to mongoDB
-connectDB().catch(err => console.log(err));
+// MongoDB Connection
+connectDB().catch((err) => console.log("Error connecting to MongoDB:", err));
 async function connectDB() {
-  await mongoose.connect(process.env.DATABASE);
+  try {
+    await mongoose.connect(process.env.DATABASE);
+    console.log("Connected to MongoDB successfully!");
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+  }
 }
 
 // routes
@@ -59,8 +72,10 @@ app.use("/admin/comments", routerAdminComments);
 app.use("/admin/transacciones", routerAdminTransactions);
 app.use("/messages", routerMessages);
 
-// start the server
+// Initialize Socket.io
 initializeSocket(io);
+
+// Start the server
 server.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });

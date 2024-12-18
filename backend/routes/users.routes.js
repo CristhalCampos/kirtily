@@ -4,6 +4,7 @@ import { registerValidation, loginValidation, forgotValidation, resetValidation,
 import { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, viewAccount, editPassword, viewMyProfile, editProfile, shareProfile } from "../controllers/users.controller.js";
 import { viewUser, followOrUnfollowUser, blockUser, reportUser } from "../controllers/other_user.controller.js";
 import { dynamicUpload } from "../middlewares/dynamicUpload.middleware.js";
+import { refreshToken } from "../middlewares/tokens.middleware.js";
 
 /**
  * Users routes
@@ -15,6 +16,8 @@ const routerUsers = Router();
  * @method POST
  */
 routerUsers.post("/login", loginValidation, loginUser);
+
+routerUsers.post("/refresh-token", refreshToken);
 
 /**
  * Register user
